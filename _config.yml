@@ -1,0 +1,4 @@
+title: cp.juanjuan
+description: 鬥 code 年華.
+theme: minima # 或者先不設主題，自訂樣式
+permalink: /blog/:title/
