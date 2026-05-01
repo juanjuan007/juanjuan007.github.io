@@ -3,143 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notebook</title>
+    <title>Notebook | Brian</title>
     <style>
-        /* 基礎樣式：保證跨平台一致性 */
-        body {
-            background-color: #ffffff; /* 換成白底，確保最安全 */
-            color: #1a1a1a;
-            font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-            line-height: 1.5;
-            padding: 40px 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* 標題區 */
-        header {
-            border-bottom: 2px solid #000;
-            padding-bottom: 20px;
-            margin-bottom: 50px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            letter-spacing: -1px;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .subtitle {
-            color: #666;
-            font-size: 0.9rem;
-            margin-top: 5px;
+        body {
+            background-color: #fff;
+            color: #111;
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            height: 100vh;
+            overflow: hidden; /* 防止主頁捲動，營造精緻感 */
         }
 
-        /* 導覽列表：這是核心，不要模塊，要清單 */
+        .container {
+            display: flex;
+            height: 100%;
+        }
+
+        /* 左側條列區 */
+        .left-content {
+            flex: 1;
+            padding: 80px 10%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            margin-bottom: 40px;
+            border-left: 8px solid #000;
+            padding-left: 20px;
+        }
+
         .note-list {
             list-style: none;
-            padding: 0;
         }
 
         .note-item {
-            margin-bottom: 30px;
-            transition: 0.2s;
+            margin-bottom: 25px;
+            position: relative;
         }
 
         .note-item a {
             text-decoration: none;
-            color: inherit;
-            display: block;
+            color: #444;
+            font-size: 1.4rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
         }
 
-        .note-category {
-            font-size: 0.75rem;
-            background: #000;
-            color: #fff;
-            padding: 2px 6px;
-            display: inline-block;
-            margin-bottom: 8px;
+        /* 序號裝飾 */
+        .note-item a::before {
+            content: "→";
+            margin-right: 15px;
+            font-family: monospace;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: 0.3s;
         }
 
-        .note-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            display: block;
+        .note-item a:hover {
+            color: #000;
+            padding-left: 10px;
         }
 
-        .note-desc {
-            color: #666;
-            font-size: 0.95rem;
-            margin-top: 5px;
+        .note-item a:hover::before {
+            opacity: 1;
+            transform: translateX(0);
         }
 
-        /* 滑鼠移上去的視覺效果 */
-        .note-item:hover .note-title {
-            color: #2563eb; /* 藍色點綴 */
-            text-decoration: underline;
+        /* 右側照片區 */
+        .right-image {
+            flex: 1;
+            background-color: #f0f0f0;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* 底部 */
-        footer {
-            margin-top: 100px;
-            font-size: 0.8rem;
-            color: #999;
-            text-align: right;
+        .right-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 確保照片填滿區域且不變形 */
+            filter: grayscale(100%); /* 灰階效果更顯個性，可刪除 */
+            transition: 0.5s;
         }
 
-        /* 響應式：手機板調整 */
-        @media (max-width: 600px) {
-            h1 { font-size: 1.8rem; }
-            .note-title { font-size: 1.2rem; }
+        .right-image:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        /* 手機板調整 */
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            .right-image { display: none; } /* 手機板隱藏圖片，節省空間 */
+            body { overflow: auto; }
+            header h1 { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>CPNOTE_INDEX</h1>
-        <div class="subtitle">Personal learning archive & development log.</div>
-    </header>
+    <div class="container">
+        <main class="left-content">
+            <header>
+                <h1>CP NOTE<span>.</span></h1>
+            </header>
 
-    <main>
-        <ul class="note-list">
-            <li class="note-item">
-                <a href="algorithms.html">
-                    <span class="note-category">ALGO</span>
-                    <span class="note-title">Algorithms & Logic</span>
-                    <div class="note-desc">關於演算法、複雜度分析與競賽題目的解法筆記。</div>
-                </a>
-            </li>
+            <ul class="note-list">
+                <li class="note-item">
+                    <a href="algorithms.html">Algorithms / 演算法</a>
+                </li>
+                <li class="note-item">
+                    <a href="data-structures.html">Data Structures / 資料結構</a>
+                </li>
+                <li class="note-item">
+                    <a href="web-notes.html">Web Notes / 網頁筆記</a>
+                </li>
+                <li class="note-item">
+                    <a href="daily-logs.html">Daily Logs / 開發日誌</a>
+                </li>
+                <li class="note-item">
+                    <a href="resources.html">Resources / 常用資源</a>
+                </li>
+            </ul>
+        </main>
 
-            <li class="note-item">
-                <a href="data-struct.html">
-                    <span class="note-category">STRUCT</span>
-                    <span class="note-title">Data Structures</span>
-                    <div class="note-desc">從 Linked List 到 Segment Tree 的抽象資料型態實作。</div>
-                </a>
-            </li>
-
-            <li class="note-item">
-                <a href="web-dev.html">
-                    <span class="note-category">WEB</span>
-                    <span class="note-title">Web Development</span>
-                    <div class="note-desc">前端技術棧、CSS 技巧與 JavaScript 深度探索。</div>
-                </a>
-            </li>
-
-            <li class="note-item">
-                <a href="others.html">
-                    <span class="note-category">MISC</span>
-                    <span class="note-title">Miscellaneous</span>
-                    <div class="note-desc">開發環境設定、工具推薦及其他雜項紀錄。</div>
-                </a>
-            </li>
-        </ul>
-    </main>
-
-    <footer>
-        <p>LAST UPDATED: 2024 / BUILD BY GITHUB</p>
-    </footer>
+        <aside class="right-image">
+            <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Cover Image">
+        </aside>
+    </div>
 
 </body>
 </html>
