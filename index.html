@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brian's Dev Notebook</title>
     <style>
+        /* --- 基礎設定 --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             background-color: #fafafa;
             color: #1a1a1a;
@@ -14,56 +16,107 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden; /* 防止主頁捲動 */
         }
+
         .main-container {
             display: flex;
             width: 90%;
             max-width: 1000px;
             background: white;
-            padding: 40px;
+            padding: 50px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             border-radius: 12px;
             align-items: center;
         }
-        /* 左側照片 */
+
+        /* --- 左側照片區 --- */
         .photo-side {
             flex: 1;
-            padding-right: 40px;
+            padding-right: 50px;
+            display: flex;
+            justify-content: center;
         }
+
         .photo-frame {
             width: 100%;
-            max-width: 350px;
-            aspect-ratio: 1 / 1; /* 正方形感 */
+            max-width: 320px; /* 限制照片最大寬度 */
+            /* 💡這裡移除了 aspect-ratio，保留照片原始長方形比例 */
             overflow: hidden;
-            border-radius: 8px;
+            border-radius: 8px; /* 輕微圓角 */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* 淡淡的陰影 */
         }
+
         .photo-frame img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
+            height: auto; /* 高度自動 */
+            display: block;
+            object-fit: contain; /* 確保整張照片都顯示出來 */
         }
-        /* 右側文字 */
+
+        /* --- 右側文字內容區 --- */
         .content-side {
-            flex: 1;
+            flex: 1.2; /* 文字區稍微寬一點 */
             border-left: 1px solid #eee;
-            padding-left: 40px;
+            padding-left: 50px;
         }
-        h1 { font-size: 2rem; margin-bottom: 30px; letter-spacing: -1px; }
-        .note-list { list-style: none; }
-        .note-item { margin-bottom: 20px; }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 35px;
+            letter-spacing: -1.5px;
+            text-transform: uppercase;
+        }
+
+        .note-list {
+            list-style: none;
+        }
+
+        .note-item {
+            margin-bottom: 22px;
+        }
+
         .note-item a {
             text-decoration: none;
-            color: #555;
-            font-size: 1.2rem;
-            font-weight: 500;
-            transition: 0.2s;
+            color: #444;
+            font-size: 1.25rem;
+            font-weight: 600;
+            transition: 0.2s ease;
+            display: inline-block;
         }
-        .note-item a:hover { color: #000; padding-left: 10px; }
-        
+
+        /* 懸停效果：文字變黑並稍微靠左 */
+        .note-item a:hover {
+            color: #000;
+            transform: translateX(5px);
+        }
+
+        /* --- 響應式設計 (手機板) --- */
         @media (max-width: 768px) {
-            .main-container { flex-direction: column; height: auto; margin: 20px; }
-            .photo-side { padding-right: 0; margin-bottom: 30px; }
-            .content-side { border-left: none; padding-left: 0; border-top: 1px solid #eee; padding-top: 30px; }
+            body { overflow: auto; }
+            .main-container {
+                flex-direction: column;
+                height: auto;
+                margin: 20px;
+                padding: 30px;
+            }
+            .photo-side {
+                padding-right: 0;
+                margin-bottom: 30px;
+            }
+            .photo-frame {
+                max-width: 200px; /* 手機板照片小一點 */
+            }
+            .content-side {
+                border-left: none;
+                padding-left: 0;
+                border-top: 1px solid #eee;
+                padding-top: 30px;
+                width: 100%;
+                text-align: center;
+            }
+            h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -72,17 +125,17 @@
     <div class="main-container">
         <div class="photo-side">
             <div class="photo-frame">
-                <img src="juan.jpg" alt="Juan">
+                <img src="photo.png" alt="juanjuan">
             </div>
         </div>
 
         <div class="content-side">
-            <h1>NOTES & PROJECTS.</h1>
+            <h1>Dev Notebook.</h1>
             <ul class="note-list">
-                <li class="note-item"><a href="algo.html">Algorithm Notes</a></li>
-                <li class="note-item"><a href="web.html">Web Development</a></li>
-                <li class="note-item"><a href="problems.html">Problem Solving</a></li>
-                <li class="note-item"><a href="ds.html">Data Structures</a></li>
+                <li class="note-item"><a href="pages/algorithms.html">01 Algorithm Notes</a></li>
+                <li class="note-item"><a href="pages/web-dev.html">02 Web Development</a></li>
+                <li class="note-item"><a href="pages/problem-solving.html">03 Problem Solving</a></li>
+                <li class="note-item"><a href="pages/data-structures.html">04 Data Structures</a></li>
             </ul>
         </div>
     </div>
