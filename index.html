@@ -9,7 +9,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            background-color: #f8f9fa; /* 輕盈的背景色 */
+            background-color: #f8f9fa;
             color: #1a1a1a;
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro TC", "Microsoft JhengHei", sans-serif;
             min-height: 100vh;
@@ -19,19 +19,19 @@
             padding: 20px;
         }
 
-        /* 1. 整體方格放大：最大寬度 1200px */
+        /* 1. 整體方格 */
         .main-container {
             display: flex;
             width: 100%;
             max-width: 1200px; 
             background: white;
-            padding: 80px; /* 內距放大，更有呼吸感 */
+            padding: 80px;
             box-shadow: 0 40px 100px rgba(0,0,0,0.06);
             border-radius: 24px;
             align-items: center;
         }
 
-        /* 2. 左側照片區：寬度增加 */
+        /* 2. 左側照片區 */
         .photo-side {
             flex: 1.2;
             padding-right: 80px;
@@ -41,7 +41,7 @@
 
         .photo-frame {
             width: 100%;
-            max-width: 480px; /* 照片框放大 */
+            max-width: 480px;
             overflow: hidden;
             border-radius: 16px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -55,18 +55,18 @@
         }
 
         .photo-frame:hover img {
-            transform: scale(1.05); /* 懸停放大效果 */
+            transform: scale(1.05);
         }
 
-        /* 3. 右側文字區：分隔線與間距放大 */
+        /* 3. 右側文字區 */
         .content-side {
             flex: 1;
-            border-left: 4px solid #f0f0f0; /* 線條加粗 */
+            border-left: 4px solid #f0f0f0;
             padding-left: 80px;
         }
 
         h1 {
-            font-size: 4rem; /* 標題字體放大 */
+            font-size: 4rem;
             font-weight: 900;
             margin-bottom: 50px;
             letter-spacing: -2px;
@@ -78,13 +78,13 @@
         }
 
         .note-item {
-            margin-bottom: 30px; /* 列表間距放大 */
+            margin-bottom: 30px;
         }
 
         .note-item a {
             text-decoration: none;
             color: #666;
-            font-size: 1.8rem; /* 選單文字放大 */
+            font-size: 1.8rem;
             font-weight: 700;
             transition: all 0.3s ease;
             display: inline-block;
@@ -92,7 +92,7 @@
 
         .note-item a:hover {
             color: #000;
-            transform: translateX(15px); /* 懸停向右滑動 */
+            transform: translateX(15px);
         }
 
         /* 響應式調整 */
@@ -120,9 +120,9 @@
         <div class="content-side">
             <h1>juanjuan<br>鬥 code 年華.</h1>
             <ul class="note-list">
-                <li class="note-item"><a href="/post/2026-05-01.md>About me & Blog</a></li>
-                <li class="note-item"><a href="pages/web-dev.html">Algorithm Note</a></li>
-                <li class="note-item"><a href="pages/problem-solving.html">Problem Solving</a></li>
+                <li class="note-item"><a href="/blog/about-me/">About me & Blog</a></li>
+                <li class="note-item"><a href="/blog/algorithm-note/">Algorithm Note</a></li>
+                <li class="note-item"><a href="/blog/problem-solving/">Problem Solving</a></li>
             </ul>
         </div>
     </div>
