@@ -3,144 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notebook | Brian</title>
+    <title>Brian's Dev Notebook</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            background-color: #fff;
-            color: #111;
-            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            background-color: #fafafa;
+            color: #1a1a1a;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             height: 100vh;
-            overflow: hidden; /* 防止主頁捲動，營造精緻感 */
-        }
-
-        .container {
-            display: flex;
-            height: 100%;
-        }
-
-        /* 左側條列區 */
-        .left-content {
-            flex: 1;
-            padding: 80px 10%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        header h1 {
-            font-size: 3rem;
-            font-weight: 900;
-            letter-spacing: -1px;
-            margin-bottom: 40px;
-            border-left: 8px solid #000;
-            padding-left: 20px;
-        }
-
-        .note-list {
-            list-style: none;
-        }
-
-        .note-item {
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .note-item a {
-            text-decoration: none;
-            color: #444;
-            font-size: 1.4rem;
-            font-weight: 500;
-            transition: all 0.3s;
             display: flex;
             align-items: center;
+            justify-content: center;
         }
-
-        /* 序號裝飾 */
-        .note-item a::before {
-            content: "→";
-            margin-right: 15px;
-            font-family: monospace;
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: 0.3s;
+        .main-container {
+            display: flex;
+            width: 90%;
+            max-width: 1000px;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            border-radius: 12px;
+            align-items: center;
         }
-
-        .note-item a:hover {
-            color: #000;
-            padding-left: 10px;
-        }
-
-        .note-item a:hover::before {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* 右側照片區 */
-        .right-image {
+        /* 左側照片 */
+        .photo-side {
             flex: 1;
-            background-color: #f0f0f0;
-            position: relative;
-            overflow: hidden;
+            padding-right: 40px;
         }
-
-        .right-image img {
+        .photo-frame {
+            width: 100%;
+            max-width: 350px;
+            aspect-ratio: 1 / 1; /* 正方形感 */
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        .photo-frame img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* 確保照片填滿區域且不變形 */
-            filter: grayscale(100%); /* 灰階效果更顯個性，可刪除 */
-            transition: 0.5s;
+            object-fit: cover;
         }
-
-        .right-image:hover img {
-            filter: grayscale(0%);
-            transform: scale(1.05);
+        /* 右側文字 */
+        .content-side {
+            flex: 1;
+            border-left: 1px solid #eee;
+            padding-left: 40px;
         }
-
-        /* 手機板調整 */
+        h1 { font-size: 2rem; margin-bottom: 30px; letter-spacing: -1px; }
+        .note-list { list-style: none; }
+        .note-item { margin-bottom: 20px; }
+        .note-item a {
+            text-decoration: none;
+            color: #555;
+            font-size: 1.2rem;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .note-item a:hover { color: #000; padding-left: 10px; }
+        
         @media (max-width: 768px) {
-            .container { flex-direction: column; }
-            .right-image { display: none; } /* 手機板隱藏圖片，節省空間 */
-            body { overflow: auto; }
-            header h1 { font-size: 2rem; }
+            .main-container { flex-direction: column; height: auto; margin: 20px; }
+            .photo-side { padding-right: 0; margin-bottom: 30px; }
+            .content-side { border-left: none; padding-left: 0; border-top: 1px solid #eee; padding-top: 30px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <main class="left-content">
-            <header>
-                <h1>CP NOTE<span>.</span></h1>
-            </header>
+    <div class="main-container">
+        <div class="photo-side">
+            <div class="photo-frame">
+                <img src="juan.jpg" alt="Juan">
+            </div>
+        </div>
 
+        <div class="content-side">
+            <h1>NOTES & PROJECTS.</h1>
             <ul class="note-list">
-                <li class="note-item">
-                    <a href="algorithms.html">Algorithms / 演算法</a>
-                </li>
-                <li class="note-item">
-                    <a href="data-structures.html">Data Structures / 資料結構</a>
-                </li>
-                <li class="note-item">
-                    <a href="web-notes.html">Web Notes / 網頁筆記</a>
-                </li>
-                <li class="note-item">
-                    <a href="daily-logs.html">Daily Logs / 開發日誌</a>
-                </li>
-                <li class="note-item">
-                    <a href="resources.html">Resources / 常用資源</a>
-                </li>
+                <li class="note-item"><a href="algo.html">Algorithm Notes</a></li>
+                <li class="note-item"><a href="web.html">Web Development</a></li>
+                <li class="note-item"><a href="problems.html">Problem Solving</a></li>
+                <li class="note-item"><a href="ds.html">Data Structures</a></li>
             </ul>
-        </main>
-
-        <aside class="right-image">
-            <img src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Cover Image">
-        </aside>
+        </div>
     </div>
 
 </body>
