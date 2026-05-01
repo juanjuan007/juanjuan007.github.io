@@ -1,91 +1,221 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>我的個人網站</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dev Notebook | 程式筆記</title>
     <style>
-        body {
+        :root {
+            --primary-color: #2563eb;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --card-bg: #ffffff;
+            --accent-color: #3b82f6;
+        }
+
+        * {
             margin: 0;
-            font-family: Arial;
-            background: #0f172a;
-            color: #e2e8f0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        header {
-            background: #020617;
-            padding: 20px;
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
         }
 
+        /* 導航欄 */
         nav {
-            background: #1e293b;
-            padding: 10px;
-            text-align: center;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 10%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid #e2e8f0;
         }
 
-        nav a {
-            color: #38bdf8;
-            margin: 0 15px;
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
             text-decoration: none;
         }
 
-        section {
-            padding: 40px;
-            max-width: 800px;
-            margin: auto;
+        .nav-links a {
+            margin-left: 2rem;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* 英雄區塊 (Hero Section) */
+        header {
+            padding: 5rem 10% 3rem;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 搜尋框 */
+        .search-container {
+            margin: 2rem auto;
+            max-width: 500px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 50px;
+            border: 1px solid #e2e8f0;
+            outline: none;
+            transition: 0.3s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* 筆記分類卡片佈局 */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding: 2rem 10% 5rem;
         }
 
         .card {
-            background: #1e293b;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
         }
 
-        a {
-            color: #38bdf8;
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.25rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            color: #64748b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem;
+            border-top: 1px solid #e2e8f0;
+            color: #94a3b8;
+        }
+
+        /* 手機版調整 */
+        @media (max-width: 768px) {
+            header h1 { font-size: 2rem; }
+            .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
 
-<header>
-    我的網站
-</header>
+    <nav>
+        <a href="#" class="logo">DevNote.</a>
+        <div class="nav-links">
+            <a href="#">首頁</a>
+            <a href="#">所有筆記</a>
+            <a href="#">關於我</a>
+        </div>
+    </nav>
 
-<nav>
-    <a href="#about">關於我</a>
-    <a href="#projects">作品</a>
-    <a href="#contact">聯絡</a>
-</nav>
+    <header>
+        <h1>程式競賽與開發筆記</h1>
+        <p>記錄演算法、資料結構與 Web 開發的點點滴滴，將複雜的邏輯轉化為可視化的知識。</p>
+        
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="搜尋筆記，例如：Dijkstra, React...">
+        </div>
+    </header>
 
-<section id="about">
-    <div class="card">
-        <h2>關於我</h2>
-        <p>我是juanjuan 正在學習演算法與競程。</p>
-        <p>興趣：寫題目、優化程式、做專案。</p>
-    </div>
-</section>
+    <main class="grid">
+        <a href="pages/algorithms.html" class="card">
+            <span class="card-icon">🧩</span>
+            <h3>演算法 (Algorithms)</h3>
+            <p>包含動態規劃、貪婪演算法及各類競賽常考題型解析。</p>
+        </a>
 
-<section id="projects">
-    <div class="card">
-        <h2>我的作品</h2>
-        <ul>
-            <li>題解整理（之後補）</li>
-            <li>演算法筆記</li>
-            <li>比賽紀錄</li>
-        </ul>
-    </div>
-</section>
+        <a href="pages/data-structures.html" class="card">
+            <span class="card-icon">📊</span>
+            <h3>資料結構</h3>
+            <p>從基礎的 Stack, Queue 到進階的 Segment Tree 與圖論結構。</p>
+        </a>
 
-<section id="contact">
-    <div class="card">
-        <h2>聯絡我</h2>
-        <p>GitHub：<a href="https://github.com/">點我</a></p>
-    </div>
-</section>
+        <a href="pages/web-dev.html" class="card">
+            <span class="card-icon">🌐</span>
+            <h3>網頁開發</h3>
+            <p>前端框架、後端架構以及效能優化相關心得。</p>
+        </a>
+
+        <a href="pages/snippets.html" class="card">
+            <span class="card-icon">✂️</span>
+            <h3>程式碼片段</h3>
+            <p>常用且高效的 Code Snippets，隨取隨用。</p>
+        </a>
+
+        <a href="pages/resources.html" class="card">
+            <span class="card-icon">📚</span>
+            <h3>學習資源</h3>
+            <p>推薦的書籍、線上課程與優質的技術部落格。</p>
+        </a>
+
+        <a href="pages/logs.html" class="card">
+            <span class="card-icon">📓</span>
+            <h3>開發日誌</h3>
+            <p>記錄平日遇到的 Bug 與解決過程的「碎碎念」。</p>
+        </a>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 My Dev Notebook. Built with Love and Code.</p>
+    </footer>
 
 </body>
 </html>
