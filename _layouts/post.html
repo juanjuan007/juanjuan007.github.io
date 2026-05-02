@@ -5,24 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
     <style>
-        <body>
-            <a href="/archives/" class="back">← Back</a>
-        
-            <h1>{{ page.title }}</h1>
-            
-            {% assign post_year = page.date | date: "%Y" %}
-            {% if post_year != "9999" %}
-            <div class="post-info">
-                {{ page.date | date: "%Y-%m-%d" }}
-            </div>
-            {% else %}
-            <div style="margin-bottom: 30px;"></div> 
-            {% endif %}
-        
-            <div class="post-content">
-                {{ content }}
-            </div>
-        </body>
+        body { 
+            font-family: -apple-system, "SF Pro TC", "Microsoft JhengHei", sans-serif; 
+            line-height: 1.7; 
+            max-width: 700px; 
+            margin: 50px auto; 
+            padding: 0 20px; 
+            color: #333; 
+        }
 
         .back { 
             display: inline-block;
@@ -36,7 +26,7 @@
 
         /* 標題：縮小尺寸，保持優雅 */
         h1 { 
-            font-size: 1.8rem; /* 從 2.2 縮小到 1.8 */
+            font-size: 1.8rem; 
             font-weight: 600;
             margin-bottom: 12px;
             color: #1a1a1a;
@@ -44,7 +34,7 @@
             letter-spacing: -0.5px;
         }
 
-        /* > 日期：纖細的線條與淡灰色 */
+        /* 日期：纖細的線條與淡灰色 */
         .post-info {
             border-left: 2px solid #f0f0f0; 
             padding-left: 12px;
@@ -59,9 +49,14 @@
             color: #333;
         }
 
-        /* 內文標題也稍微連動縮小，保持層次感 */
-        .post-content h2 { font-size: 1.4rem; margin-top: 30px; }
-        .post-content h3 { font-size: 1.2rem; }
+        /* 內文標題也稍微連動縮小 */
+        .post-content h2 { font-size: 1.4rem; margin-top: 30px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .post-content h3 { font-size: 1.2rem; margin-top: 25px; }
+        
+        /* 針對 About Me (9999) 的間距補償 */
+        .no-date-spacer {
+            margin-bottom: 30px;
+        }
     </style>
 </head>
 <body>
@@ -69,9 +64,14 @@
 
     <h1>{{ page.title }}</h1>
     
-    <div class="post-info">
-        {{ page.date | date: "%Y-%m-%d" }}
-    </div>
+    {% assign post_year = page.date | date: "%Y" %}
+    {% if post_year != "9999" %}
+        <div class="post-info">
+            {{ page.date | date: "%Y-%m-%d" }}
+        </div>
+    {% else %}
+        <div class="no-date-spacer"></div>
+    {% endif %}
 
     <div class="post-content">
         {{ content }}
