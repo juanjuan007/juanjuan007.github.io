@@ -5,14 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title }}</title>
     <style>
-        body { 
-            font-family: -apple-system, "SF Pro TC", "Microsoft JhengHei", sans-serif; 
-            line-height: 1.7; 
-            max-width: 700px; 
-            margin: 50px auto; 
-            padding: 0 20px; 
-            color: #333; 
-        }
+        <body>
+            <a href="/archives/" class="back">← Back</a>
+        
+            <h1>{{ page.title }}</h1>
+            
+            {% assign post_year = page.date | date: "%Y" %}
+            {% if post_year != "9999" %}
+            <div class="post-info">
+                {{ page.date | date: "%Y-%m-%d" }}
+            </div>
+            {% else %}
+            <div style="margin-bottom: 30px;"></div> 
+            {% endif %}
+        
+            <div class="post-content">
+                {{ content }}
+            </div>
+        </body>
 
         .back { 
             display: inline-block;
