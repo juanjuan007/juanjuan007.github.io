@@ -9,18 +9,21 @@ layout: default
   <hr>
 
   {% comment %} 
-      1. 抓取所有 Collection (_problems) 中的標籤並排序
+      1. 抓取標籤：加入過濾條件，跳過包含 -1 的標籤
   {% endcomment %}
   {% assign all_tags = "" | split: "," %}
   {% for prob in site.problems %}
-      {% for t in prob.tags %}
-          {% assign all_tags = all_tags | push: t %}
-      {% endfor %}
+      {% comment %} 檢查這篇文章的所有標籤，如果其中一個是 "-1"，這篇文就不處理 {% endcomment %}
+      {% unless prob.tags contains "-1" %}
+          {% for t in prob.tags %}
+              {% assign all_tags = all_tags | push: t %}
+          {% endfor %}
+      {% endunless %}
   {% endfor %}
   {% assign unique_tags = all_tags | uniq | sort %}
 
   {% comment %} 
-      2. 依照分類顯示列表，不顯示日期
+      2. 顯示列表：同樣加入過濾條件
   {% endcomment %}
   {% for tag in unique_tags %}
       <div class="tag-group-wrapper">
@@ -28,77 +31,16 @@ layout: default
           
           <ul class="clean-note-list">
               {% for item in site.problems %}
+                  {% comment %} 雙重檢查：標籤符合且不包含不公開標記 {% endcomment %}
                   {% if item.tags contains tag %}
-                      <li class="post-item">
-                          <a class="post-link" href="{{ item.url }}">{{ item.title }}</a>
-                      </li>
+                      {% unless item.tags contains "-1" %}
+                          <li class="post-item">
+                              <a class="post-link" href="{{ item.url }}">{{ item.title }}</a>
+                          </li>
+                      {% endunless %}
                   {% endif %}
               {% endfor %}
           </ul>
       </div>
   {% endfor %}
 </div>
-
-<style>
-  /* 容器與 Archives 一致 */
-  .archives-container { 
-      max-width: 800px; 
-      margin: 40px auto; 
-      padding: 0 20px; 
-      font-family: sans-serif; 
-  }
-
-  .back-home { 
-      display: inline-block;
-      margin-bottom: 25px; 
-      text-decoration: none; 
-      color: #bbb; 
-      font-size: 0.85rem;
-      transition: color 0.3s;
-  }
-  .back-home:hover { color: #000; }
-
-  /* 標題對齊 Archives */
-  h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 20px; }
-  
-  hr { border: 0; border-top: 1px solid #eee; margin-bottom: 30px; }
-
-  /* 分類區塊間距 */
-  .tag-group-wrapper { margin-bottom: 45px; }
-
-  /* 分類標題樣式：小巧、灰字、全大寫 */
-  .tag-category-title {
-      font-size: 0.9rem;
-      color: #bbb;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 20px;
-      font-family: monospace;
-  }
-
-  /* 題目列表：移除點點，對齊 Archives 的乾淨感 */
-  .clean-note-list { 
-      list-style: none; 
-      padding: 0; 
-      margin: 0; 
-  }
-
-  .post-item { 
-      margin: 12px 0; 
-  }
-
-  /* 題目連結：字體大小與粗細完全對齊 Archives 的文章連結 */
-  .post-link { 
-      color: #333; 
-      text-decoration: none; 
-      font-size: 1.2rem; 
-      font-weight: 500; 
-      transition: all 0.3s ease; 
-      display: inline-block;
-  }
-  
-  .post-link:hover { 
-      color: #000; 
-      text-decoration: underline;
-  }
-</style>
