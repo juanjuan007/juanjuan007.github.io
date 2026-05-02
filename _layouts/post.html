@@ -60,7 +60,11 @@
     </style>
 </head>
 <body>
-    <a href="/archives/" class="back">← Back</a>
+    {% if page.collection == "problems" %}
+        <a href="/problem-solving/" class="back">← Back</a>
+    {% else %}
+        <a href="/archives/" class="back">← Back</a>
+    {% endif %}
 
     <h1>{{ page.title }}</h1>
     
