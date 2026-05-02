@@ -24,7 +24,7 @@
         }
         .back:hover { color: #000; }
 
-        /* 標題：縮小尺寸，保持優雅 */
+        /* 標題：對齊你的優雅風格 */
         h1 { 
             font-size: 1.8rem; 
             font-weight: 600;
@@ -34,7 +34,7 @@
             letter-spacing: -0.5px;
         }
 
-        /* 日期：纖細的線條與淡灰色 */
+        /* 日期區塊：帶有左側裝飾線 */
         .post-info {
             border-left: 2px solid #f0f0f0; 
             padding-left: 12px;
@@ -49,18 +49,18 @@
             color: #333;
         }
 
-        /* 內文標題也稍微連動縮小 */
+        /* 內文標題樣式調整 */
         .post-content h2 { font-size: 1.4rem; margin-top: 30px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
         .post-content h3 { font-size: 1.2rem; margin-top: 25px; }
         
-        /* 針對 About Me (9999) 的間距補償 */
+        /* 針對 INFO 或 無日期文章的間距補償 */
         .no-date-spacer {
             margin-bottom: 30px;
         }
     </style>
 </head>
 <body>
-    {% if page.collection == "problems" %}
+    {% if page.path contains "_problems/" %}
         <a href="/problem-solving/" class="back">← Back</a>
     {% else %}
         <a href="/archives/" class="back">← Back</a>
@@ -68,11 +68,15 @@
 
     <h1>{{ page.title }}</h1>
     
-    {% assign post_year = page.date | date: "%Y" %}
-    {% if post_year != "9999" %}
-        <div class="post-info">
-            {{ page.date | date: "%Y-%m-%d" }}
-        </div>
+    {% if page.date %}
+        {% assign post_year = page.date | date: "%Y" %}
+        {% if post_year != "9999" %}
+            <div class="post-info">
+                {{ page.date | date: "%Y-%m-%d" }}
+            </div>
+        {% else %}
+            <div class="no-date-spacer"></div>
+        {% endif %}
     {% else %}
         <div class="no-date-spacer"></div>
     {% endif %}
