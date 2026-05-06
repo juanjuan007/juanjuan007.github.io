@@ -6,7 +6,7 @@ tags: ["CSES"]
 
 <br>
 
-#### Distinct Numbers
+### Distinct Numbers
 
 <br>
 
@@ -44,7 +44,7 @@ int main(){
 
 <br>
 
-#### Apartments
+### Apartments
 
 <br>
 
