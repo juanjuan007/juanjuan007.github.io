@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }}</title>
+
+    <!-- MathJax -->
+    <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$','$$'], ['\\[','\\]']]
+      }
+    };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+
+    <style>
+        body { 
+            font-family: -apple-system, "SF Pro TC", "Microsoft JhengHei", sans-serif; 
+            line-height: 1.7; 
+            max-width: 720px; 
+            margin: 50px auto; 
+            padding: 0 20px; 
+            color: #333; 
+        }
+
+        .back { 
+            display: inline-block;
+            margin-bottom: 25px; 
+            text-decoration: none; 
+            color: #bbb; 
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+        .back:hover { color: #000; }
+
+        h1 { 
+            font-size: 1.9rem; 
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .post-info {
+            border-left: 2px solid #eee; 
+            padding-left: 12px;
+            margin-bottom: 40px;
+            color: #aaa;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .post-content {
+            font-size: 1.05rem;
+        }
+
+        .post-content h2 {
+            font-size: 1.4rem;
+            margin-top: 32px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 4px;
+        }
+
+        .post-content h3 {
+            font-size: 1.2rem;
+            margin-top: 24px;
+        }
+
+        .post-content p {
+            margin: 12px 0;
+        }
+
+        pre {
+            background: #f6f8fa;
+            padding: 14px;
+            overflow-x: auto;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        code {
+            font-family: Consolas, monospace;
+        }
+
+        p code {
+            background: #f2f2f2;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .no-date-spacer {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ✅ 只加這段 -->
+    {% if page.collection == "codes" %}
+        <a href="/codes/" class="back">← Back</a>
+    {% elsif page.url contains "/problems/" %}
+        <a href="/problem-solving/" class="back">← Back</a>
+    {% else %}
+        <a href="/archives/" class="back">← Back</a>
+    {% endif %}
+
+    <h1>{{ page.title }}</h1>
+    
+    {% if page.date %}
+        {% assign post_year = page.date | date: "%Y" %}
+        {% if post_year != "9999" %}
+            <div class="post-info">
+                {{ page.date | date: "%Y-%m-%d" }}
+            </div>
+        {% else %}
+            <div class="no-date-spacer"></div>
+        {% endif %}
+    {% else %}
+        <div class="no-date-spacer"></div>
+    {% endif %}
+
+    <div class="post-content">
+        {{ content }}
+    </div>
+
+</body>
+</html>
