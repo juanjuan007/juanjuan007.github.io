@@ -70,6 +70,8 @@ $1 \leq n,m \leq 2\times 10^{5}$ 、 $0 \leq k \leq 10^{9}$ 、 $1 \leq a_{i} , 
 
 Time : $O(m \log m + m\log n)$
 
+<br>
+
 ```cpp
 #include<bits/stdc++.h>
 using namespace std;
