@@ -4,6 +4,50 @@ title: "TOI-pre-2026"
 tags: ["TOI"]
 ---
 
+### D. 新高價
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int unsigned long long 
+
+int n,M;
+vector<int>p,pre;
+
+bool check(int x){
+    int  nw = 0;
+    for(int i=0;i<n;i++)
+        nw += p[i] * min(i - pre[i] - 1, x);
+    return(nw <= M);
+}
+
+signed main(){
+    cin>>n>>M;
+    p.resize(n);
+    for(int i=0;i<n;i++) cin >> p[i];
+    pre.resize(n);
+    stack<int> st;
+    for(int i=0;i<n;i++){
+        while(!st.empty() && p[st.top()] < p[i]) st.pop();
+        pre[i] = (st.empty() ? -1 : st.top());
+        st.push(i);
+    }
+
+    int res = 0;
+    int l = 0 , r = n-1;
+    while(l <= r){
+        int m = (l+r)/2;
+        if(check(m)){
+            res = m;
+            l = m+1;
+        }else{
+            r = m-1;
+        }
+    }
+    cout<<res; 
+    return(0);
+}
+```
 
 ---
 
