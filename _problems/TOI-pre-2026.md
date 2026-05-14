@@ -4,7 +4,58 @@ title: "TOI-pre-2026"
 tags: ["TOI"]
 ---
 
+---
+
 ### D. 新高價
+
+Substask 3
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long 
+
+int n,L;
+vector<int>p , perfix;
+
+
+int get(int l , int r){
+    r = min(n-1 , r);
+    if(l==0) return(perfix[r]);
+    return(perfix[r] - perfix[l-1]);
+}
+
+bool check(int x){
+    int res = 0;
+    for(int i=0;i<n;i++) res += get(i+1,i+x);
+    return(res <= L);
+}
+
+signed main(){
+    cin>>n>>L;
+    p.resize(n);
+    for(int i=0;i<n;i++) cin>>p[i];
+    
+    perfix = p;
+    for(int i=1;i<n;i++) perfix[i] += perfix[i-1];
+    
+    int res , l = 0, r = n-1 , m;
+    
+    while(l<=r){
+        m = (l+r)/2;
+        if(check(m)){
+            res = m;
+            l = m+1;
+        }else{
+            r = m-1;
+        }
+    }
+    cout<<res;    
+    return(0);
+}
+```
+
 ```cpp
 #include<bits/stdc++.h>
 using namespace std;
