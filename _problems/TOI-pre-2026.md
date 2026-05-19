@@ -56,6 +56,8 @@ signed main(){
 }
 ```
 
+滿分解
+
 ```cpp
 #include<bits/stdc++.h>
 using namespace std;
