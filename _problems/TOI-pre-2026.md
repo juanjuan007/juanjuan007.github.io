@@ -8,7 +8,7 @@ tags: ["TOI"]
 
 ### D. 新高價
 
-Substask 3
+Substask 3 : $p_{1} < p_{2} < ... < p_{n}$
 
 ```cpp
 #include<bits/stdc++.h>
