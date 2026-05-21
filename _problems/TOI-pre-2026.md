@@ -8,6 +8,50 @@ tags: ["TOI"]
 
 ### D. 新高價
 
+Subtask 1
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long 
+
+int n,L;
+vector<int>p;
+
+int f(int l,int r){
+    int res = 0;
+    int mx = p[l];
+
+    for(int i=l+1;i<=r;i++){
+        if(p[i] > mx){
+            res += p[i];
+            mx = p[i];
+        }
+    }
+
+    return res;
+}
+
+signed main(){
+    cin>>n>>L;
+    p.resize(n);
+    for(int i=0;i<n;i++) cin>>p[i];
+    
+    for(int i=0;i<n;i++){
+        int nw = 0;
+        for(int j=0;j<n;j++)
+            nw += f(j,min(j+i , n-1));
+            
+        if(nw > L){
+            cout<<i-1;
+            return(0);
+        }
+    }
+    cout<<n-1;
+    return(0);
+}
+```
+
 Substask 3 : $p_{1} < p_{2} < ... < p_{n}$
 
 ```cpp
@@ -117,6 +161,57 @@ Subtask 1 : $n \leq 20$
 每個節點只有兩種可能 : 有開分店或沒開分店。
 
 所以用 01 枚舉所有可能的狀況，再計算能得到的利益，取最大值即可。
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long 
+
+int n , m , ans;
+vector<int>w;
+vector<vector<int>>g;
+
+void f(int x){
+    int nw = 0;
+    for(int i=0;i<n;i++){
+        if(!(x & (1<<i))) continue;
+        nw += w[i]; 
+        int cnt = 0;
+        for(int j : g[i]){
+            if(x & (1<<j)) cnt++;
+        }
+        if(cnt > m) return;
+    }
+    ans = max( nw , ans);
+    return;
+}
+
+signed main(){
+    ios::sync_with_stdio(0) , cin.tie(0);
+    
+    cin>>n>>m;
+    
+    w.resize(n);
+    for(int i=0;i<n;i++) cin>>w[i];
+    
+    g.resize(n);
+    
+    int u,v;
+    for(int i=0;i<n-1;i++){
+        cin>>u>>v;
+        u--; v--;
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }    
+    
+    for(int i=0;i<(1<<n);i++) f(i);
+    
+    cout<<ans;
+
+    return(0);
+}
+```
 
 <br>
 
