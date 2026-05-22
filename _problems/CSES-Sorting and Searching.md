@@ -166,6 +166,10 @@ int main(){
 
 $1 \leq n \leq 2\times 10^{5}$ 、 $1 \leq x \leq 10^{9}$ 、 $1\leq p_{i} \leq x$
 
+
+---
+
+
 <br>
 
 **思路**
