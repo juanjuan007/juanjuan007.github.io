@@ -173,9 +173,6 @@ int main(){
 $1 \leq n \leq 2\times 10^{5}$ 、 $1 \leq x \leq 10^{9}$ 、 $1\leq p_{i} \leq x$
 
 
----
-
-
 <br>
 
 **思路**
@@ -239,7 +236,54 @@ int main(){
 
 **題敘**
 
+有 $n$ 張門票可供選擇，第 $i$ 張的價格是 $h_{i}$。
+會有 $m$ 個顧客接續到來，每位顧客會有一個 $t_{i}$，表能接受的最高票價，他會獲得離最高票價最接近的車票，若無法獲得即是 $-1$。
 
+$1 \leq n,m \leq 2\times 10^{5}$ 、 $1\leq h_{i} , t_{i} \leq 10^{9}$
 
+<br>
 
+**思路**
 
+每次要找當前有的票中價格 $\leq t$ 的最大者。
+
+<br>
+
+&lt;M一&gt;
+
+若價格有序，獲得的車票等價於第一個價格 $>t$ 左側那張。
+
+可以使用 multiset 跟二分搜來完成。
+
+Time : $O((n+m) \log n)$
+
+<br>
+
+Code :
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    int n,m,x;
+    cin>>n>>m;
+    multiset<int>s;
+    for(int i=0;i<n;i++){
+        cin>>x;
+        s.insert(x);
+    }
+    for(int i=0;i<m;i++){
+        cin>>x;
+        auto it = s.upper_bound(x);
+        if(it==s.begin()){
+            cout<<-1<<'\n';
+        }else{
+            it--;
+            cout<<*it<<'\n';
+            s.erase(it);
+        }
+    }
+    return(0);
+}
+```
