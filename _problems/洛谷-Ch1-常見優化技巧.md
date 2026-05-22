@@ -24,7 +24,7 @@ tags: ["洛谷" , "-1"]
 Time : $O(n \log n)$
 <br>
 
-Code
+Code :
 
 ```cpp
 #include<bits/stdc++.h>
@@ -72,7 +72,7 @@ Time : $O(n \log n)$ ， 常數較 <M一> 小。
 
 <br>
 
-Code
+Code :
 
 ```cpp
 #include<bits/stdc++.h>
@@ -125,7 +125,7 @@ Time : $O(n)$
 
 <br>
 
-Code
+Code :
 
 ```cpp
 #include<bits/stdc++.h>
@@ -184,7 +184,7 @@ Time : $O(n)$
 
 <br>
 
-Code
+Code :
 
 ```cpp
 #include<bits/stdc++.h>
@@ -228,7 +228,7 @@ Time : $O(n log^{2} n)$
 
 <br>
 
-Code
+Code :
 ```cpp
 #include<bits/stdc++.h>
 using namespace std;
@@ -297,7 +297,7 @@ Time : $$O(n \log n)$$
 
 <br>
 
-Code
+Code :
 
 ```cpp
 #include<bits/stdc++.h>
