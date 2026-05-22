@@ -66,7 +66,7 @@ $1 \leq n,m \leq 2\times 10^{5}$ 、 $0 \leq k \leq 10^{9}$ 、 $1 \leq a_{i} , 
 
 <br>
 
-<M一>
+&lt;M一&gt;
 
 當 $b$ 是無序時，若有數個可被選擇的公寓會無法做出選擇，因為你無法確保是否存在更優的取法。
 
@@ -110,18 +110,18 @@ int main(){
 
 <br>
 
-<M二>
+&lt;M二&gt;
 
 觀察上述思路，若我們將 $a$ 也排序，會發現選擇的公寓面積會單調不降，因為 $a_{i}-k \leq a_{i+1}-k$ 。
 
 因此，可以用一個指針指向目前合法的最小公寓面積並不斷右移。
 
-Time : $O(n \log n + m \log m)$ ， 常數較 <M一> 小
+Time : $O(n \log n + m \log m)$ ， 常數較 &lt;M一&gt; 小
 
 
 <br>
 
-Code
+Code :
 
 ```cpp
 #include<bits/stdc++.h>
@@ -209,7 +209,7 @@ Time : $O(n \log n)$
 
 <br>
 
-Code
+Code :
 
 ```cpp
 #include<bits/stdc++.h>
