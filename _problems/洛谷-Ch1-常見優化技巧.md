@@ -381,7 +381,7 @@ WIP
 
 令 $h_{i}$ 表示第 $i$ 個 column 往上連續可以延伸幾格，則當前 row 會形成類似柱狀圖。
 
-注意到一個矩形的高度會由其中最矮的 column 決定，因此可以枚舉每個 column 作為矩形高度，並向左右尋找第一個高度 $< h_{i}$ 的位置，因為中間所有 column 的高度皆 $\leq h_{i}$ ，故這段區間皆可形成高度為 $h_{i}$ 的合法矩形，。
+注意到一個矩形的高度會由其中最矮的 column 決定，因此可以枚舉每個 column 作為矩形高度，並向左右尋找第一個高度 $< h_{i}$ 的位置，因為中間所有 column 的高度皆 $\geq h_{i}$ ，故這段區間皆可形成高度為 $h_{i}$ 的合法矩形。
 
 而上述尋找最近較小值可以用 monotonic stack 來完成。
 
@@ -429,6 +429,364 @@ int main(){
         }
     }
     cout<<ans*3;
+    return(0);
+}
+```
+
+### Bad Hair Day
+
+[Luogu P2866](https://www.luogu.com.cn/problem/P2866)
+
+<br>
+
+**思路**
+
+我們先把整條隊伍反轉過來，意即由 $1 ~ N$ 排序，以便接下來說明。
+
+題敘條件等價於 : 第 $i$ 頭能看到第 $j$ 頭 ($i < j$) 的條件是 $max(h_{i} , h_{i+1} , ... , h_{j}) = h_{i}$，也就是可以看到 (右側第一頭較高左側) ， 那這點可以使用 monotonic stack 求得。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long 
+signed main(){
+    ios::sync_with_stdio(0) , cin.tie(0);
+    int n,ans = 0;
+    cin>>n;
+    vector<int>h(n);
+    for(int i=0;i<n;i++) cin>>h[i];
+    stack<int>st;
+    for(int i=n-1;i>=0;i--){
+        while(!st.empty() && h[st.top()] < h[i]) st.pop();
+        if(st.empty()) ans += n-i-1;
+        else ans += st.top()-i-1;
+        st.push(i);
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+### 長方形
+[Luogu P1950](https://www.luogu.com.cn/problem/P1950)
+
+<br>
+
+**思路**
+
+枚舉每個 row 當矩形下側的狀況，並枚舉其中每個 column 的高度向左右延伸有幾種剪法。
+
+若當前在 column $i$ ，向上高度 $h_{i}$ 向左、右分別可延伸至 $l_{i} , r_{i}$，則剪法有 $(i - l_{i} + 1) \times (r_{i} - i - 1) \times h_{i}$ 。
+
+取總和即是答案。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long 
+signed main(){
+    ios::sync_with_stdio(0) , cin.tie(0);
+
+    int n,m;
+    cin>>n>>m;
+
+    vector<vector<bool>>g(n,vector<bool>(m));
+    
+    char ch;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            cin>>ch;
+            if(ch=='.') g[i][j] = 1;
+            else if(ch=='*') g[i][j] = 0;
+        }
+    }
+
+    int ans = 0;
+    vector<int>h(m) , l(m) , r(m);
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++)
+            if(g[i][j]) h[j]++;
+            else h[j] = 0;
+        
+        stack<int>st;
+        
+        for(int j=0;j<m;j++){
+            while(!st.empty() && h[j] < h[st.top()]) st.pop();
+            if(st.empty()) l[j] = -1;
+            else l[j] = st.top();
+            st.push(j);
+        }
+        
+        while(!st.empty()) st.pop();
+        
+        for(int j=m-1;j>=0;j--){
+            while(!st.empty() && h[j] <= h[st.top()]) st.pop();
+            if(st.empty()) r[j] = m;
+            else r[j] = st.top();
+            st.push(j);
+        }
+        
+        for(int j=0;j<m;j++)
+            ans += (j-l[j])*(r[j]-j)*h[j];
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+### 掃描
+[Luogu P2032](https://www.luogu.com.cn/problem/P2032)
+
+<br>
+
+**思路**
+
+可以發現 : 此時木板最右側是第 $i$ 個數字，若 $j < i$ 滿足 $a_{j} \leq a_{i}$ ，則第 $j$ 個數字不可能是接下來的答案之一。
+
+因此，使用 monotonic deque ， 在 deque 中維護可能成為最大值的數字並確保其中都還在木板覆蓋範圍內。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    int n,k;
+    cin>>n>>k;
+    vector<int>num(n);
+    deque<int>dq;
+    for(int i=0;i<n;i++){
+        cin>>num[i];
+        while(!dq.empty() && num[dq.back()] <= num[i]) dq.pop_back();
+        while(!dq.empty() && dq.front()<=i-k) dq.pop_front();
+        dq.push_back(i);
+        if(i+1>=k) cout<<num[dq.front()]<<'\n';
+    }
+    return(0);
+}
+```
+
+### 理想的正方形
+[Luogu P2216](https://www.luogu.com.cn/problem/P2216)
+
+<br>
+
+**思路**
+
+使用 monotonic deque。
+
+對每個 row 分別求出當前子陣列最小、大值，再求出其子陣列最小、大值。
+
+也可以解釋成在兩個維度維護單調性。
+
+Time : $O(n^{2})$
+
+<br>
+    
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+    int a,b,n,ans = INT_MAX;
+    cin>>a>>b>>n;
+    vector<vector<int>>num(a,vector<int>(b));
+    for(int i=0;i<a;i++)
+        for(int j=0;j<b;j++)
+            cin>>num[i][j];
+    vector<deque<int>>mini(a),maxi(a);
+    for(int j=0;j<b;j++){
+        deque<int>mnq,mxq; 
+        for(int i=0;i<a;i++){
+            while(!mini[i].empty() && num[i][mini[i].back()]>=num[i][j]) mini[i].pop_back();
+            while(!mini[i].empty() && mini[i].front() <= j-n) mini[i].pop_front();
+            mini[i].push_back(j);
+            
+            while(!mnq.empty() && num[mnq.back()][mini[mnq.back()].front()] >= num[i][mini[i].front()]) mnq.pop_back();
+            while(!mnq.empty() && mnq.front()<=i-n) mnq.pop_front();
+            mnq.push_back(i);
+            
+
+            while(!maxi[i].empty() && num[i][maxi[i].back()]<=num[i][j]) maxi[i].pop_back();
+            while(!maxi[i].empty() && maxi[i].front() <= j-n) maxi[i].pop_front();
+            maxi[i].push_back(j);
+
+            while(!mxq.empty() && num[mxq.back()][maxi[mxq.back()].front()] <= num[i][maxi[i].front()]) mxq.pop_back();
+            while(!mxq.empty() && mxq.front()<=i-n) mxq.pop_front();
+            mxq.push_back(i); 
+
+            if(i+1>=n && j+1>=n){
+                ans = min(ans,num[mxq.front()][maxi[mxq.front()].front()] - num[mnq.front()][mini[mnq.front()].front()]);
+            }
+        }
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+### 唯一的雪花
+[UVa 11572](https://vjudge.net/problem/uva-11572)
+
+<br>
+
+**思路**
+
+枚舉以第 $r$ 個為右端點的最大區間，易知 $l$ 會是單調不降的。
+
+也就是若 $a_{r}$ 在當前區間已經出現過，則要將左界右移，而是否出現過可以用 map 做判斷。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+
+void solve(){
+    int n;
+    cin>>n;
+    vector<int>a(n);
+    for(int i=0;i<n;i++) cin>>a[i];
+
+    map<int,bool>mp;
+    
+    int ans=0,l=0,r=0;
+    while(r < n){
+        while(mp[a[r]]){
+            mp[a[l]] = false;
+            l++;
+        }
+        mp[a[r]] = true;
+        ans = max(r-l+1 , ans);
+        r++;
+    }
+    cout<<ans<<'\n';
+    return;
+}
+
+int main(){
+    int t;
+    cin>>t;
+    while(t--) solve();
+    return(0);
+}
+```
+
+###  Sure Bet
+
+[Luogu P4653](https://www.luogu.com.cn/problem/P4653)
+
+<br>
+
+WIP
+
+###  Diamond Collector
+
+[Luogu P3143](https://www.luogu.com.cn/problem/P3143)
+
+<br>
+
+**思路**
+
+對於放入展示櫃的能放就要盡可能的放，因為要放入最多個。
+
+但是目前無法確定對於每個鑽石要選擇哪些，因此不妨令 $x_{i}$ 代表當第 $i$ 顆鑽石是整個展覽櫃最大者有幾顆鑽石。
+
+而共有兩個展覽櫃可放，當第 $i$ 顆是其中一個展覽櫃最大者時，不失一般性假設另一個展覽櫃都放較小的鑽石，那就是所有 $j$ 滿足 $w_{j} < w_{i} - k$ 中， $x_{j}$ 最大者。
+
+為了更簡易維護上述事情，先將 $w$ 排序，就可以使用二分搜之類來作。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+
+    int n,k;
+    cin>>n>>k;
+    vector<int>w(n) , x(n);
+    for(int i=0;i<n;i++) cin>>w[i];
+    sort(w.begin(),w.end());
+
+    for(int i=0;i<n;i++){
+        auto it = lower_bound(w.begin(),w.end(),w[i]-k) - w.begin();
+        x[i] = i - it + 1;
+    }
+
+    int ans = 0,nw = 0 , pre=0;
+    for(int i=0;i<n;i++){
+        while(w[nw] < w[i]-k){ pre = max(x[nw] , pre); nw++; }
+        ans = max(x[i] + pre , ans);
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+### 插入排序
+[Luogu P7910](https://www.luogu.com.cn/problem/P7910)
+
+<br>
+
+暴力做。
+對於操作二直接計數，要特別注意是穩定排序，也就是若 $j > i$ 且 $a_{j} = a_{i}$ ，則排序後 $j$ 會在 $i$ 後方。
+
+Time : $O(nq)$
+
+<br>
+
+Code :
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+
+    int n,q;
+    cin>>n>>q;
+    vector<int>a(n);
+    for(int i=0;i<n;i++) cin>>a[i];
+    int t,x,v,res;
+    while(q--){
+        cin>>t;
+        if(t==1){
+            cin>>x>>v;
+            x--;
+            a[x] = v;
+        }else if(t==2){
+            cin>>x;
+            x--;
+            res = 0;
+            for(int i=0;i<x;i++) res += (a[i] <= a[x]);
+            for(int i=x+1;i<n;i++) res += (a[i] < a[x]);
+            cout<<res+1<<'\n';  
+        }
+    }
     return(0);
 }
 ```
