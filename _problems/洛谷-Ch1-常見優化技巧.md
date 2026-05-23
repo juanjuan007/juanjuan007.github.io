@@ -327,3 +327,104 @@ int main(){
     return(0);
 }
 ```
+
+<br>
+
+&lt;M三&gt;
+
+最直覺的想法是新加入一個數就排序一次，但這樣效率不彰，應使用其他種排序方式。
+
+使用計數排序。查詢時只需要不斷累加直到獲獎人數。
+
+Time : $O(An)$ ， $A$ : 成績值域
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    int n,w,s,p;
+    cin>>n>>w;
+
+    vector<int>cnt(605,0);
+    
+    for(int i=0;i<n;i++){
+        cin>>s;
+        cnt[s]++;
+        p = max((i+1)*w/100 , 1);
+        for(int j=600;j>=0;j--){
+            p -= cnt[j];
+            if(p<=0){ cout<<j<<" "; break;}
+
+        }
+    }
+    return(0);
+}
+```
+
+### 求和
+
+[Luogu P2671](https://www.luogu.com.cn/problem/P2671)
+
+WIP
+
+### 玉蟾宮
+[Luogu P4147](https://www.luogu.com.cn/problem/P4147)
+
+<br>
+
+枚舉每個 row 當矩形下側的狀況，此時矩形便會由一段連續的 column 構成。
+
+令 $h_{i}$ 表示第 $i$ 個 column 往上連續可以延伸幾格，則當前 row 會形成類似柱狀圖。
+
+注意到一個矩形的高度會由其中最矮的 column 決定，因此可以枚舉每個 column 作為矩形高度，並向左右尋找第一個高度 $< h_{i}$ 的位置，因為中間所有 column 的高度皆 $\leq h_{i}$ ，故這段區間皆可形成高度為 $h_{i}$ 的合法矩形，。
+
+而上述尋找最近較小值可以用 monotonic stack 來完成。
+
+這種做法意如「懸一條線向左右掃去」，所以又稱為「懸線法」。
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    int n,m; char ch;
+    cin>>n>>m;
+    vector<vector<int>>pre(n,vector<int>(m,-1));
+    int ans = 0;
+    for(int i=0;i<n;i++){
+        vector<int>h(m),l(m),r(m);
+        for(int j=0;j<m;j++){
+            cin>>ch;
+            if(ch=='R') pre[i][j] = i;
+            else if(ch=='F' && i>0) pre[i][j] = pre[i-1][j];
+            h[j] = i - pre[i][j];
+        }
+        stack<int>st;
+        for(int j=0;j<m;j++){
+            while(!st.empty() && h[st.top()] >= h[j]) st.pop();
+            if(st.empty()) l[j] = -1;
+            else l[j] = st.top();
+            st.push(j);
+        }
+        while(!st.empty()) st.pop();
+        for(int j=m-1;j>=0;j--){
+            while(!st.empty() && h[st.top()] >= h[j]) st.pop();
+            if(st.empty()) r[j] = m;
+            else r[j] = st.top();
+            st.push(j);
+        }
+
+        for(int j=0;j<m;j++){
+            ans = max(ans,(r[j]-l[j]-1)*h[j]);
+        }
+    }
+    cout<<ans*3;
+    return(0);
+}
+```
