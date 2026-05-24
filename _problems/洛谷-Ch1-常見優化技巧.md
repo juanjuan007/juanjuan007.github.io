@@ -752,6 +752,8 @@ int main(){
 
 <br>
 
+&lt;M一&gt;
+
 暴力做。
 對於操作二直接計數，要特別注意是穩定排序，也就是若 $j > i$ 且 $a_{j} = a_{i}$ ，則排序後 $j$ 會在 $i$ 後方。
 
@@ -790,3 +792,385 @@ int main(){
     return(0);
 }
 ```
+
+<br>
+
+&lt;M二&gt;
+
+類似計數排序。
+
+紀錄每個數字的出現次數並支援求區間和，以及在它前方相同的數字有幾個，才能判斷是在哪個位置。
+
+前者需要離線處理、離散化後，使用 BIT 或線段樹處理，~~也可以寫動態開點線段樹~~。
+
+後者則是直接暴力維護即可，因為保證操作一的次數至多 $5000$。
+
+Time : $O(n \log n + mn + (q-m) \log n)$，其中 $m$ 為操作一次數。
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+int sz;
+vector<int>bit;
+
+int lowbit(int x){
+    return(x & (-x));
+}
+
+void Update(int id,int val){
+    for(;id<=sz;id+=lowbit(id)) bit[id]+=val;
+}
+
+int query(int id){
+    int res = 0;
+    for(;id;id-=lowbit(id)) res += bit[id];
+    return(res);
+}
+
+int main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    
+    int n,Q;
+    cin>>n>>Q;
+    
+    vector<int>num(n),r;
+    for(int i=0;i<n;i++) cin>>num[i];
+    r = num;
+    
+    vector<array<int,3>>qry(Q);
+    for(int i=0;i<Q;i++){
+        cin>>qry[i][0]>>qry[i][1];
+        qry[i][1]--;
+        if(qry[i][0]==1){
+            cin>>qry[i][2];
+            r.push_back(qry[i][2]);
+        }
+    }
+
+    sort(r.begin(),r.end());
+    r.resize(unique(r.begin(),r.end())-r.begin());
+    sz = r.size();
+    
+    bit.resize(sz+1);
+    vector<int>cnt(sz+1),p(n);
+    for(int i=0;i<n;i++){
+        num[i] = lower_bound(r.begin(),r.end(),num[i])-r.begin()+1;
+        p[i] = cnt[num[i]]++;
+        Update(num[i],1);
+    }
+    
+    for(int i=0;i<Q;i++){
+        if(qry[i][0]==1)
+            qry[i][2] = lower_bound(r.begin(),r.end(),qry[i][2]) - r.begin() + 1;
+    }
+
+    for(int i=0;i<Q;i++){
+        if(qry[i][0]==1){
+            cnt[num[qry[i][1]]]--;
+            cnt[qry[i][2]]++;
+            
+            int nw = 0;
+            for(int j=0;j<qry[i][1];j++){
+                if(num[j]==qry[i][2]) nw++;
+            }
+            p[qry[i][1]] = nw++;
+            
+            for(int j=qry[i][1]+1;j<n;j++){
+                if(num[j]==num[qry[i][1]]){
+                    p[j]--;
+                }
+                if(num[j]==qry[i][2]){
+                    p[j]++;
+                }
+            }
+            Update(num[qry[i][1]],-1);
+            Update(qry[i][2],1);
+            num[qry[i][1]] = qry[i][2];
+        }else if(qry[i][0]==2){
+            int res = query(num[qry[i][1]]);
+            if(cnt[num[qry[i][1]]] > 1){
+                res -= (cnt[num[qry[i][1]]] - 1 - p[qry[i][1]]);
+            }
+            cout<<res<<'\n';
+        }
+    }
+    return(0);
+}
+```
+
+
+### 奶牛浴場
+
+[Luogu P1578](https://www.luogu.com.cn/problem/P1578)
+
+WIP
+
+### PLA -Postering
+
+[Luogu P3467](https://www.luogu.com.cn/problem/P3467)
+
+<br>
+
+**思路**
+
+建築物的寬度明顯不會影響到海報的個數只會影響其寬度，故在下述做法中不探討寬度。
+
+<br>
+
+&lt;M一&gt;
+
+以範測(左)為例，我的切法(右) 會類似於下圖，
+
+<img width="188" height="246" alt="螢幕擷取畫面 2026-05-24 095701" src="https://github.com/user-attachments/assets/333caeb1-89ec-482b-9b1e-55ccdfb6800f" />
+
+<img width="188" height="246" alt="螢幕擷取畫面 2026-05-24 102505" src="https://github.com/user-attachments/assets/35550423-7998-4995-921d-d6882fe1940c" />
+
+我們可以來體會這個做法的正確性，
+
+觀察到每棟建築物的上方會貼齊海報的上沿覆蓋，又此張海報至多能延伸至兩側最近較矮的建築。
+
+可以利用 monotonic stack 對每棟建築都計算上述的事情，
+
+若 ${l_{i} , r_{i}}$ , {l_{j} , r_{j}} 相同，則代表可以用一張海報即可，這點易證；
+
+否則對於每個區間 ${l,r}$ 都需要一張海報。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+#define p pair<int,int>
+#define F first
+#define S second 
+
+int main() {
+    ios:sync_with_stdio(0),cin.tie(0);
+
+    int n,d,w;
+    cin>>n;
+    
+    vector<int>h(n);
+    for(int i=0;i<n;i++){
+        cin>>d>>w;
+        h[i] = w;
+    }
+    vector<p>arr(n);
+    stack<int>st;
+    for(int i=0;i<n;i++){
+        while(!st.empty() && h[st.top()]>=h[i]) st.pop();
+        if(st.empty()) arr[i].F = 0;
+        else arr[i].F = st.top()+1;
+        st.push(i);
+    }
+    
+    while(!st.empty()) st.pop();
+    
+    for(int i=n-1;i>=0;i--){
+        while(!st.empty() && h[st.top()]>=h[i]) st.pop();
+        if(st.empty()) arr[i].S = n-1;
+        else arr[i].S = st.top()-1;
+        st.push(i);
+    }
+    
+    set<p>s;
+    for(int i=0;i<n;i++) s.insert(arr[i]);
+    cout<<s.size();
+    
+    return(0);
+}
+```
+
+&lt;M二&gt;
+
+新加入一棟建築，會分成以下幾種情況，
+
+case 1 : 有一棟建築物與其等高且兩者之間沒有更矮的建築
+
+不需要增加海報，可以直接從那棟建築的海報延伸過來。
+
+case 2 : else
+
+增加一張海報。
+
+判別條件可以直接用 monotonic stack 維護。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    ios::sync_with_stdio(0) , cin.tie(0);
+    int n;
+    cin>>n;
+
+    int h,w;
+    
+    int ans = 0;
+    stack<int>st;
+
+    for(int i=0;i<n;i++){
+        cin>>h>>w;
+        while(!st.empty() && st.top() > w) st.pop();
+        ans++;
+        if(!st.empty() && st.top()==w) ans--;
+        st.push(w);
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+### 單調隊列、滑動窗口
+
+[Luogu P1886](https://www.luogu.com.cn/problem/P1886)
+
+<br>
+
+**思路**
+
+最小值、最大值做法差異不大，在此論只討論最小值的情況。
+
+若窗口最右側是第 $i$ 個數字，若 $j < i$ 滿足 $a_{j} \leq a_{i}$ ，則第 $j$ 個數字不可能是接下來的答案之一。
+
+因此，使用 monotonic deque ， 在 deque 中維護可能成為最大值的數字並確保其中都還在窗口覆蓋範圍內。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long
+
+signed main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    int n,k;
+    cin>>n>>k;
+    vector<int>num(n);
+    deque<int>dq1,dq2;
+    vector<int>ans1,ans2;
+    for(int i=0;i<n;i++){
+        cin>>num[i];
+        while(!dq1.empty() && num[dq1.back()]<=num[i]) dq1.pop_back();
+        while(!dq1.empty() && dq1.front() <= i-k) dq1.pop_front();
+        dq1.push_back(i);
+        if(i+1>=k) ans1.push_back(num[dq1.front()]);
+    
+        while(!dq2.empty() && num[dq2.back()]>=num[i]) dq2.pop_back();
+        while(!dq2.empty() && dq2.front() <= i-k) dq2.pop_front();
+        dq2.push_back(i);
+        if(i+1>=k) ans2.push_back(num[dq2.front()]);
+    }
+    for(int i:ans2) cout<<i<<" ";
+    cout<<'\n';
+    for(int i:ans1) cout<<i<<" ";
+    return(0);
+}
+```
+
+### Balanced Lineup
+
+[Luogu P2880](https://www.luogu.com.cn/problem/P2880)
+
+<br>
+
+**思路**
+
+需要一個能支援區間差尋極值得資料結構，可以使用 Sparse Table 或 線段樹。
+
+Time : $O (q + n) \log n$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+struct Node{
+    int mini,maxi;  
+};
+
+int n;
+vector<int>num;
+vector<Node>seg;
+
+void pull(int id){
+    seg[id].mini = min(seg[id*2+1].mini,seg[id*2+2].mini);
+    seg[id].maxi = max(seg[id*2+1].maxi,seg[id*2+2].maxi);
+}
+
+void Build(int l,int r,int id){
+    if(l==r){
+        seg[id].mini = num[l];
+        seg[id].maxi = num[l];
+        return;
+    }
+    int m = (l+r)/2;
+    Build(l,m,id*2+1);
+    Build(m+1,r,id*2+2);
+    pull(id);
+}
+
+int query(int ql,int qr,int type,int l,int r,int id){
+    if(qr < l || r < ql){
+        if(type==0) return(INT_MAX);
+        else if(type==1) return(-1);
+    }
+    
+    if(ql<=l && r<=qr){
+        if(type==0) return(seg[id].mini);
+        else if(type==1) return(seg[id].maxi);
+    }
+    
+    int m = (l+r)/2;
+    
+    if(type==0) return(min(query(ql,qr,type,l,m,id*2+1) , query(ql,qr,type,m+1,r,id*2+2)));
+    else if(type==1) return(max(query(ql,qr,type,l,m,id*2+1) , query(ql,qr,type,m+1,r,id*2+2)));
+}
+
+int main(){
+    int q;
+    cin>>n>>q;
+    num.resize(n);
+    for(int i=0;i<n;i++) cin>>num[i];
+    seg.resize(4*n);
+    Build(0,n-1,0);
+    int a,b;
+    for(int i=0;i<q;i++){
+        cin>>a>>b;
+        a--; b--;
+        cout<<query(a,b,1,0,n-1,0) - query(a,b,0,0,n-1,0)<<'\n';
+    }
+    return(0);    
+}
+```
+
+
+### 切蛋糕
+[Luogu P1714](https://www.luogu.com.cn/problem/P1714)
+
+**思路**
+
+求一段連續區間不妨使用前綴和。
+
+區間長度至多是 $m$，也就是當 $i$ 是整段區間的末端時，起點 $j$ 必須滿足 $i-m \leq j \leq i$。
+
+根據上述思路，我們可以枚舉每塊蛋糕做為終點，在 deque 中維護目前可能的 
