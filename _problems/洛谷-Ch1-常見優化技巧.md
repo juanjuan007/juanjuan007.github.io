@@ -4,6 +4,8 @@ title: "洛谷-CH1-常見優化技巧"
 tags: ["洛谷" , "-1"]
 ---
 
+---
+
 ### A-B 數對
 [Luogu P1102](https://www.luogu.com.cn/problem/P1102)
 
@@ -108,6 +110,8 @@ signed main(){
 
 <br>
 
+---
+
 ### 逛畫展
 
 [P1638](https://www.luogu.com.cn/problem/P1638)
@@ -165,6 +169,8 @@ int main(){
 
 <br>
 
+---
+
 ### 最大子段和
 
 [P1115](https://www.luogu.com.cn/problem/P1115)
@@ -205,6 +211,9 @@ signed main(){
 }
 ```
 
+<br>
+
+---
 
 ### 直播獲獎
 
@@ -364,11 +373,19 @@ int main(){
 }
 ```
 
+<br>
+
+---
+
 ### 求和
 
 [Luogu P2671](https://www.luogu.com.cn/problem/P2671)
 
 WIP
+
+<br>
+
+---
 
 ### 玉蟾宮
 [Luogu P4147](https://www.luogu.com.cn/problem/P4147)
@@ -433,6 +450,11 @@ int main(){
 }
 ```
 
+
+<br>
+---
+
+
 ### Bad Hair Day
 
 [Luogu P2866](https://www.luogu.com.cn/problem/P2866)
@@ -471,6 +493,10 @@ signed main(){
     return(0);
 }
 ```
+
+<br>
+
+---
 
 ### 長方形
 [Luogu P1950](https://www.luogu.com.cn/problem/P1950)
@@ -544,6 +570,10 @@ signed main(){
 }
 ```
 
+<br>
+
+---
+
 ### 掃描
 [Luogu P2032](https://www.luogu.com.cn/problem/P2032)
 
@@ -579,6 +609,10 @@ int main(){
     return(0);
 }
 ```
+
+<br>
+
+---
 
 ### 理想的正方形
 [Luogu P2216](https://www.luogu.com.cn/problem/P2216)
@@ -639,6 +673,10 @@ int main(){
 }
 ```
 
+<br>
+---
+
+
 ### 唯一的雪花
 [UVa 11572](https://vjudge.net/problem/uva-11572)
 
@@ -690,6 +728,10 @@ int main(){
 }
 ```
 
+
+<br>
+---
+
 ###  Sure Bet
 
 [Luogu P4653](https://www.luogu.com.cn/problem/P4653)
@@ -697,6 +739,9 @@ int main(){
 <br>
 
 WIP
+
+<br>
+---
 
 ###  Diamond Collector
 
@@ -746,6 +791,10 @@ int main(){
     return(0);
 }
 ```
+
+<br>
+
+---
 
 ### 插入排序
 [Luogu P7910](https://www.luogu.com.cn/problem/P7910)
@@ -902,12 +951,18 @@ int main(){
 }
 ```
 
+<br>
+---
 
 ### 奶牛浴場
 
 [Luogu P1578](https://www.luogu.com.cn/problem/P1578)
 
 WIP
+
+
+<br>
+---
 
 ### PLA -Postering
 
@@ -1034,6 +1089,10 @@ int main(){
 }
 ```
 
+<br>
+---
+
+
 ### 單調隊列、滑動窗口
 
 [Luogu P1886](https://www.luogu.com.cn/problem/P1886)
@@ -1084,6 +1143,10 @@ signed main(){
     return(0);
 }
 ```
+
+<br>
+
+---
 
 ### Balanced Lineup
 
@@ -1163,14 +1226,110 @@ int main(){
 }
 ```
 
+<br>
+---
 
 ### 切蛋糕
 [Luogu P1714](https://www.luogu.com.cn/problem/P1714)
 
 **思路**
 
-求一段連續區間不妨使用前綴和。
+求一段連續區間不妨使用前綴和，查詢區間 $[l,r]$ 即是 $p_{r} - p_{l-1}$。
 
 區間長度至多是 $m$，也就是當 $i$ 是整段區間的末端時，起點 $j$ 必須滿足 $i-m \leq j \leq i$。
 
-根據上述思路，我們可以枚舉每塊蛋糕做為終點，在 deque 中維護目前可能的 
+根據上述思路，我們可以枚舉每塊蛋糕做為終點，在 deque 中維護目前可能的值，並維護其單調性。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long 
+
+signed main(){
+    int n,m;
+    cin>>n>>m;
+    vector<int>arr(n),p(n+1);
+    for(int i=0;i<n;i++){
+        cin>>arr[i];
+        p[i+1] = p[i] + arr[i];
+    }
+    int ans = -LLON_MAX;
+    deque<int>dq;
+    dq.push_back(0);
+    for(int i=1;i<=n;i++){
+        while(!dq.empty() && dq.front() < i-m) dq.pop_front();
+        ans = max(p[i]-p[dq.front()],ans);    
+        while(!dq.empty() && p[dq.back()]>=p[i]) dq.pop_back();
+        dq.push_back(i);
+    }
+
+    cout<<ans;
+    return(0);
+}
+```
+
+<br>
+---
+
+### 琪露諾
+[Luogu P1725](https://www.luogu.com.cn/problem/P1725)
+
+<br>
+
+**思路**
+
+" 在格子 $i$ 能移動到 $[i+L,i+R]$ "，可以轉換成 "位置 $i$ 可由 $[i-R , i-L]$ 移動一步來。
+
+令 $dp_{i}$ 表走到 $i$ 可能獲得的最大冰凍指數，很顯然就會有 $dp_{i} = min(dp_{j}) + A_{i} , i-R\leq j \i-L$  。
+
+更新方式可以使用 monotonic deque 維護。
+
+注意題敘說明只要下一步走到的位置編號 $> N$ 即到對岸，所以答案是 $max(dp_{n - R + 1} , ... , dp_{n-1})$ 。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long 
+
+signed main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+
+    int n,L,R;
+    cin>>n>>L>>R;
+    vector<int>num(n+1),dp(n+1,-1e9),use(n+1,0);
+    for(int i=0;i<=n;i++) cin>>num[i];
+    
+    dp[0] = 0;
+
+    deque<int>dq;
+    for(int i=0;i<=n;i++){
+        int l = max(i-R,0LL) ,r = min(i-L,n);
+        if(r < 0) continue;
+        
+        while(!dq.empty() && dp[dq.back()] <= dp[r]) dq.pop_back();
+        while(!dq.empty() && dq.front() < l) dq.pop_front();
+        if(dp[r] != -1e18) dq.push_back(r);
+
+        dp[i] = num[i] + dp[dq.front()];
+    }
+
+    int ans = -1e9;
+    for(int i=n-R+1;i<=n;i++) ans = max(dp[i],ans);
+    cout<<ans;
+    return(0);
+}
+```
+
+---
