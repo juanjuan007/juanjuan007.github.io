@@ -9,3 +9,7 @@ collections:
 markdown: kramdown
 kramdown:
   math_engine: mathjax
+
+collections:
+  algorithm_notes:
+    output: true
