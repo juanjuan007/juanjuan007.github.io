@@ -4,7 +4,7 @@ title: "Sorting and Searching"
 tags: ["CSES"]
 ---
 
-<br>
+---
 
 ### Distinct Numbers
 
@@ -44,7 +44,7 @@ int main(){
 }
 ```
 
-<br>
+---
 
 ### Apartments
 
@@ -152,11 +152,7 @@ int main(){
 }
 ```
 
-
-
-
-
-<br>
+---
 
 ### Ferris Wheel
 
@@ -228,7 +224,7 @@ int main(){
 }
 ```
 
-<br>
+---
 
 ### Concert Tickets
 
@@ -237,7 +233,7 @@ int main(){
 **題敘**
 
 有 $n$ 張門票可供選擇，第 $i$ 張的價格是 $h_{i}$。
-會有 $m$ 個顧客接續到來，每位顧客會有一個 $t_{i}$，表能接受的最高票價，他會獲得離最高票價最接近的車票，若無法獲得即是 $-1$。
+會有 $m$ 個顧客接續到來，每位顧客會有一個 $t_{i}$，表能接受的最高票價，他會獲得離最高票價最接近的車票，求出所獲得票價，若無法獲得即是 $-1$。
 
 $1 \leq n,m \leq 2\times 10^{5}$ 、 $1\leq h_{i} , t_{i} \leq 10^{9}$
 
@@ -287,3 +283,114 @@ int main(){
     return(0);
 }
 ```
+
+<br>
+
+&lt;M二&gt;
+
+若價格有序，我們只需要先找到最大符合的價格(方法略同上)，並持續向左直到當前價格尚未被買走，換而言之也就是要找左側最近(含自己)尚未被買走的票。
+
+這件事可以用 DSU 來做到。
+
+Time : $O((n+m) \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int n;
+vector<int>f,sz;
+ 
+void init(){
+    f.resize(n);
+    iota(f.begin(),f.end(),0);
+}
+ 
+int find_root(int x){
+    if(f[x]==-1) return(-1);
+    if(f[x]==x) return(x);
+    return(f[x] = find_root(f[x]));
+}
+ 
+int main(){
+    int m,t;
+    cin>>n>>m;
+ 
+    init();
+ 
+    vector<int>h(n);
+    for(int i=0;i<n;i++) cin>>h[i];
+    sort(h.begin(),h.end());
+ 
+    for(int i=0;i<m;i++){
+        cin>>t;
+        if(t < h[0]){ cout<<-1<<'\n'; continue;} 
+        int it = upper_bound(h.begin(),h.end(),t) - h.begin() - 1;
+        int buy = find_root(it);
+        if(buy==-1){
+            cout<<-1<<'\n';
+        }else{
+            cout<<h[buy]<<'\n';
+            if(buy==0) f[buy] = -1;
+            else f[buy] = f[buy-1];
+        }
+    }
+    return(0);
+}
+```
+
+---
+
+### Restaurant Customers
+
+<br>
+
+**題序**
+
+總共有 $n$ 位客人到餐廳，每個人皆有進入、離開時間 $[a,b]$，求出餐廳內最多同時有幾人。
+
+$1\leq n \leq 2\times 10^{5}$ 、 $1 \lea a < b \leq 10^{9}$
+
+<br>
+
+**思路**
+
+在每個時間點要知道幾個人進出，而不在乎是哪個人。
+
+我們可以依序枚舉時間並更新當前有幾個人，這樣是 $O(10^{9})$ 會 TLE ，
+
+可以發現若有一段時間沒有進出那總人數是不變的，根本不需要計算，我們只需要關注有人進出的時間即可。
+
+可以把進入、離開的時間分別排序，每次選擇兩者前面較小的一個做處理，整體概念與雙指針類似。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+    int n;
+    cin>>n;
+    vector<int>in(n),out(n);
+    for(int i=0;i<n;i++) cin>>in[i]>>out[i];
+    sort(in.begin(),in.end());
+    sort(out.begin(),out.end());
+    int ans = 0,nw = 0,a = 0, b = 0;
+    for(;a<n;a++){
+        while(b<n && out[b] < in[a]){ nw--; b++; }
+        nw++;
+        ans = max(ans,nw);
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+---
