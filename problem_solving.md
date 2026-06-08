@@ -1,3 +1,0 @@
----
-layout : problem_solving
----
