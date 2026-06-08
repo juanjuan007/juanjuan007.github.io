@@ -1,0 +1,110 @@
+---
+layout: default
+---
+
+<div class="note-container">
+
+    <a href="/algorithm-note/" class="back-link">
+        ← Algorithm Note
+    </a>
+
+    <article class="note-content">
+
+        <h1>{{ page.title }}</h1>
+
+        {% if page.tags %}
+        <div class="note-tags">
+            {% for tag in page.tags %}
+                <span class="tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <hr>
+
+        {{ content }}
+
+    </article>
+
+</div>
+
+<style>
+.note-container{
+    max-width:900px;
+    margin:40px auto;
+    padding:0 20px;
+}
+
+.back-link{
+    display:inline-block;
+    margin-bottom:25px;
+    text-decoration:none;
+    color:#bbb;
+    font-size:0.9rem;
+    transition:0.3s;
+}
+
+.back-link:hover{
+    color:#000;
+}
+
+.note-content h1{
+    font-size:2.5rem;
+    font-weight:800;
+    margin-bottom:15px;
+}
+
+.note-tags{
+    margin-bottom:20px;
+}
+
+.tag{
+    display:inline-block;
+    padding:4px 10px;
+    margin-right:8px;
+    border-radius:999px;
+    background:#f3f3f3;
+    color:#666;
+    font-size:0.8rem;
+}
+
+.note-content hr{
+    border:none;
+    border-top:1px solid #eee;
+    margin:25px 0;
+}
+
+.note-content{
+    line-height:1.8;
+}
+
+.note-content h2{
+    margin-top:40px;
+    margin-bottom:15px;
+}
+
+.note-content h3{
+    margin-top:30px;
+    margin-bottom:10px;
+}
+
+.note-content p{
+    margin:12px 0;
+}
+
+.note-content ul,
+.note-content ol{
+    margin:15px 0 15px 25px;
+}
+
+.note-content pre{
+    overflow-x:auto;
+    padding:16px;
+    border-radius:12px;
+    background:#f6f8fa;
+}
+
+.note-content code{
+    font-family:Consolas, monospace;
+}
+</style>
