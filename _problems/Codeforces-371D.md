@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Codeforces 371D Vessels"
+title: "371D Vessels"
 tags: ["Codeforces"]
 ---
 
