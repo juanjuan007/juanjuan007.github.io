@@ -981,7 +981,6 @@ WIP
 以範測(左)為例，我的切法(右) 會類似於下圖，
 
 <img width="188" height="246" alt="螢幕擷取畫面 2026-05-24 095701" src="https://github.com/user-attachments/assets/333caeb1-89ec-482b-9b1e-55ccdfb6800f" />
-
 <img width="188" height="246" alt="螢幕擷取畫面 2026-05-24 102505" src="https://github.com/user-attachments/assets/35550423-7998-4995-921d-d6882fe1940c" />
 
 我們可以來體會這個做法的正確性，
@@ -990,7 +989,7 @@ WIP
 
 可以利用 monotonic stack 對每棟建築都計算上述的事情，
 
-若 ${l_{i} , r_{i}}$ , {l_{j} , r_{j}} 相同，則代表可以用一張海報即可，這點易證；
+若 ${l_{i} , r_{i}}$ 相同，則代表可以用一張海報即可，這點易證；
 
 否則對於每個區間 ${l,r}$ 都需要一張海報。
 
