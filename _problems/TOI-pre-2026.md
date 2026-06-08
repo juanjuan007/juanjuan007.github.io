@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "TOI-pre-2026"
+title: "pre-2026"
 tags: ["TOI"]
 ---
 
