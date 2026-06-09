@@ -394,3 +394,345 @@ int main(){
 ```
 
 ---
+
+### Movie Festival
+
+<br>
+
+**題敘**
+
+有 $n$ 部電影，每部有開始、結束時間 $[a,b]$ ，求出最多可以看幾部電影。
+
+$1 \leq n  \leq 2\times 10^{5}$ 、 $1 \leq a < b \leq 10^{9}$
+
+<br>
+
+**思路**
+
+若把每部電影撥放時間視為一個線段，也等價於要找最多不重疊線段數。
+
+這是非常經典的貪心問題，解法則是 : 優先選右端點靠左的線段,如果會重疊到選過的線段就不選。
+
+很難想到這種思路，不過一樣可以來體會正確性。
+
+> 假設按照我們的做法是 $S$，有一個最佳解 $S'$。
+>
+> 兩者都先照右端點排序。
+> 
+> 找到第一個不相同的線段 $S_{i}$ , $S'_{i}$，
+>
+> 因為前者的右端點較左，因此把 $S'_{i}$ 替換成 $S_{i}$ 不會影響其它段，同時也會是最佳解之一。
+>
+> 透過上述不斷操作，我們能將 $S'$ 在不改變是最優解的同時換成 $S$ ，故可證 $S$ 是最佳解。
+>
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define p pair<int,int>
+#define F first
+#define S second
+ 
+int main(){
+    int n;
+    cin>>n;
+    vector<p>x(n);
+    for(int i=0;i<n;i++) cin>>x[i].S>>x[i].F;
+    sort(x.begin(),x.end());
+    int ans = 0,nw = -1;
+    for(auto [ed,st] : x){
+        if(st >= nw){
+            ans++;
+            nw = ed;
+        }
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+--- 
+
+### Sum of Two Values
+
+<br>
+
+**題敘**
+
+在一個有 $n$ 個數的陣列 $a$ 中，求出兩個不同位置的數字和為 $x$。
+
+$1 \leq  n \leq 2\times 10^{5}$ 、 $1 \leq x , a_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+利用排序使得陣列有單調性，
+
+可以觀察到兩件事 : 
+
+若 $a_{l} + a_{r} > x$，則對於任意的 $r' > r$，$a_{l} + a_{r'} > x$ 是必然的。
+
+若 $a_{l} + a_{r} < x$，則對於任意的 $l' < l$，$a_{l'} + a_{r} < x$ 也是必然的。
+
+就會發現暴力法中其實會算到很多不必要的組合。
+
+可以用兩個指針 $l$ , $r$ 來維護上面這件事。
+
+當 $a_{l} + a_{r} < x$ 時，右移左指針 ; 當 $a_{l} + a_{r} > x$ 時，左移右指針。
+
+大致原因如上，也可以想成在移除某個元素時，代表不可能找到另一個元素與其符合。
+
+Time : $O( n\log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long
+#define p pair<int,int>
+#define F first
+#define S second
+
+signed main(){
+    int n,k,x;
+    cin>>n>>k;
+    vector<p>num(n);
+    for(int i=0;i<n;i++){
+        cin>>x;
+        num[i] = {x,i+1};
+    }
+    sort(num.begin(),num.end());
+    int l = 0,r = n-1;
+    while(l < r){
+        if(num[l].F + num[r].F == k){
+            cout<<num[l].S<<" "<<num[r].S;
+            return(0);
+        }else if(num[l].F + num[r].F < k){
+            l++;
+        }else{
+            r--;
+        }
+    }
+    cout<<"IMPOSSIBLE";
+    return(0);
+}
+```
+
+---
+
+### Maximum Subarray Sum
+
+<br>
+
+**題敘**
+
+在一個有 $n$ 個數的陣列 $x$ 中，求出最大子陣列和(不接受空陣列)。
+
+$1 \leq  n \leq 2\times 10^{5}$ 、 $-10^{9} \leq x_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+這題有 dp 的味道，
+
+令 $dp[i]$ 代表以當前結尾最大子陣列和，那麼顯然有 $dp[i] = max(dp[i-1] + x[i] , x[i])$ ，也就是取或不取前面的。
+
+觀察轉移只需要前面一項，所以可以用滾動的方式，也就是開一個變數紀錄即可，又稱作 Kadane's Algorithm。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long 
+
+signed main(){
+    int n;
+    cin>>n;
+
+    int ans = -1e9 , pre = 0 , nw;
+    vector<int>x(n);
+    for(int i=0;i<n;i++){
+        cin>>x[i];
+        nw = max(pre,0LL) + x[i];
+        ans = max(nw , ans);
+        pre = nw;
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+---
+
+### Stick Lengths
+
+<br>
+
+**題敘**
+
+有 $n$ 根木棍，每根都有長度 $p$，你要修剪木棍長度使其一致，縮短或加長的代價都是與原本的長度差。求最小代價。
+
+$1\leq n \leq 2\times10^{5}$ 、 $1 \leq p_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+假設最終長度是 $x$ ， 那總代價會是 \sum_{i = 1}^{n} |x - p_{i}|。
+
+可以發現 $x$ 是中位數時，總代價最小。
+
+體會一下這個做法，
+
+假設有兩個點 $A$ , $B$，若取的 $x$ 在 \overline{\rm AB} 上顯然最優，那我們分別對最左、最右的兩點做配對就可以得出上述推論。
+
+至於找中位數，可以直接排序 $p$ 即可。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long
+
+signed main(){
+    int n;
+    cin>>n;
+    vector<int>p(n);
+    for(int i=0;i<n;i++) cin>>p[i];
+    sort(p.begin(),p.end());
+    int m = n/2; m = p[m];
+    int ans = 0;
+    for(int i:p) ans+=abs(m-i);
+    cout<<ans;
+    return(0);
+}
+```
+
+---
+
+### Missing Coin Sum
+
+<br>
+
+**題敘**
+
+共有 $n$ 個硬幣，每個都有其面額 $x$，求出最小的價格無法用某部分硬幣駔成。
+
+$1 \leq n \leq 2\times 10^{5}$ 、 $1 \leq x_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+我們維護一個子序列，滿足可以湊出任意金額 $\leq nowTotal (總和)$，並透過增加硬幣使範圍擴張。
+
+要加入一枚硬幣 $i$ ，必須滿足 $c_{i} \leq nowTotal + 1$，否則會無法湊出 $nowTotal + 1$。
+
+可以發現由小到大依序加入是最優的策略，因為要盡可能增大 $nowTotal$ ，提高較大的面額加入的可能。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+signed main(){
+    int n;
+    cin>>n;
+    vector<int>x(n);
+    for(int i=0;i<n;i++) cin>>x[i];
+    sort(x.begin(),x.end());
+    int nw = 0;
+    for(int i : x){
+        if(i > nw+1) break;
+        nw += i;
+    }
+    cout<<nw+1;
+    return(0);
+}
+```
+
+---
+
+### Collecting Numbers
+
+<br>
+
+**題敘**
+
+在一個陣列 $x$ 中有 $n$ 個數字，$1 ,2 ,... , n$ 恰出現一次。
+
+要按照大小順序收集所有數字。 在每一輪中，只能左至右收集，求要幾輪才能完成。
+
+<br>
+
+**思路**
+
+可以觀察到要收集每個數字只與前一個數字有關，
+
+若位置在前一個數字位置右側，則可以直接收集 ; 反之，則需要再多一輪。
+
+注意答案初始值就是 $1$ 輪。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+    vector<int>x(n) , id(n);
+    for(int i=0;i<n;i++){
+        cin>>x[i];
+        id[x[i]-1] = i;
+    }
+
+    int ans = 1;
+    for(int i=1;i<n;i++)
+        if(id[i] < id[i-1]) ans++;
+    
+    cout<<ans;
+    return(0);
+}
+```
+
+---
+
+### Collecting Numbers II
+
+<br>
+
+**題敘**
+
+
+<br>
