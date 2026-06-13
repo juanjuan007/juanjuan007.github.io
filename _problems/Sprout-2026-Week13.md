@@ -455,7 +455,7 @@ ${(A_{y} , A_{x} ), (B_{y} , B_{x})} $
 
 再透過一些操作
 
-$\equiv (p \lor (r \land s)) \land (q \lor (r \land s))  \equiv (p \lor r) \land (p \lor s) \land (q \lor r) \land ( \lor s)$
+$\equiv (p \lor (r \land s)) \land (q \lor (r \land s))  \equiv (p \lor r) \land (p \lor s) \land (q \lor r) \land (q \lor s)$
 
 就轉換成 2-SAT problem。
 
