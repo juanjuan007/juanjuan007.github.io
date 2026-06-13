@@ -439,11 +439,12 @@ int main(){
 
 通常在程式中習慣 y 是 row , x 是 column ，笛卡爾對不起。
 
-${(A_{y} , A_{x} ), ($B_{y} , B_{x})} $ 
+${(A_{y} , A_{x} ), (B_{y} , B_{x})} $ 
 
 先處理一般的 case : 不同列、不同行
 
 大概會是 :
+
 <img width="361" height="303" alt="image" src="https://github.com/user-attachments/assets/5ab32eab-6dac-4c27-b470-c5e30e30bbad" />
 
 不難發現會有兩種走法，而方向就要由 $A$ , $B$ 相對位置而定。
