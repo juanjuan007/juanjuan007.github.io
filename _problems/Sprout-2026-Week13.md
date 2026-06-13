@@ -453,15 +453,14 @@ ${(A_{y} , A_{x} ), (B_{y} , B_{x})} $
 
 所以交通要求就轉換成 : $(p \land q) \lor (r \land s)$
 
-在透過一些操作
-$
-\equiv (p \lor (r \land s)) \land (q \lor (r \land s))
-\equiv (p \lor r) \land (p \lor s) \land (q \lor r) \land ( \lor s)
-$
+再透過一些操作
 
-轉換成 2-SAT problem 。
+$\equiv (p \lor (r \land s)) \land (q \lor (r \land s))  \equiv (p \lor r) \land (p \lor s) \land (q \lor r) \land ( \lor s)$
 
-特殊的 case :
+就轉換成 2-SAT problem。
+
+
+不要忘記處理特殊的 case :
 
 同行、同列 : 只需要處理那一項為真即可，方法同上。
 
