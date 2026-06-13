@@ -567,7 +567,7 @@ int main(){
 連通性，想法難、實作也難，我輸光光。
 
 - 20260613 人生第一個 top coder (1/1) :
-<img width="400" height="100" alt="image" src="https://github.com/user-attachments/assets/2bcd0a00-3c7a-46ad-b90a-68f0cb00ce0d" />
+<img width="800" height="200" alt="image" src="https://github.com/user-attachments/assets/2bcd0a00-3c7a-46ad-b90a-68f0cb00ce0d" />
 
 - 人生第一次寫完資芽上機作業 (1/1) :
-<img width="400" height="100" alt="image" src="https://github.com/user-attachments/assets/f3d5745f-8122-4570-a1fa-ae86cdc396f5" />
+<img width="800" height="200" alt="image" src="https://github.com/user-attachments/assets/f3d5745f-8122-4570-a1fa-ae86cdc396f5" />
