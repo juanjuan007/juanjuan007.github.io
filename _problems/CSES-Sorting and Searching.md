@@ -180,6 +180,7 @@ $1 \leq n \leq 2\times 10^{5}$ 、 $1 \leq x \leq 10^{9}$ 、 $1\leq p_{i} \leq 
 那我們可以體會一下這個作法的證明。
 
 > p.f.
+> 
 > 假設存在一個最佳解 $S$
 > 
 > case 1 : $p_{l} + p_{r} \leq x$
@@ -353,7 +354,7 @@ int main(){
 
 總共有 $n$ 位客人到餐廳，每個人皆有進入、離開時間 $[a,b]$，求出餐廳內最多同時有幾人。
 
-$1\leq n \leq 2\times 10^{5}$ 、 $1 \lea a < b \leq 10^{9}$
+$1\leq n \leq 2\times 10^{5}$ 、 $1 \leq a < b \leq 10^{9}$
 
 <br>
 
