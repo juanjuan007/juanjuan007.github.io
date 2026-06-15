@@ -177,8 +177,9 @@ $1 \leq n \leq 2\times 10^{5}$ 、 $1 \leq x \leq 10^{9}$ 、 $1\leq p_{i} \leq 
 
 而上述這件事只要先將 $p$ 排序，再使用雙指針指向當前最小、最大值即可。
 
-那我們可以體會一下這個作法的正確性。
+那我們可以體會一下這個作法的證明。
 
+> p.f.
 > 假設存在一個最佳解 $S$
 > 
 > case 1 : $p_{l} + p_{r} \leq x$
@@ -413,8 +414,9 @@ $1 \leq n  \leq 2\times 10^{5}$ 、 $1 \leq a < b \leq 10^{9}$
 
 這是非常經典的貪心問題，解法則是 : 優先選右端點靠左的線段,如果會重疊到選過的線段就不選。
 
-很難想到這種思路，不過一樣可以來體會正確性。
+很難想到這種思路，不過一樣可以來體會證明。
 
+> p.f.
 > 假設按照我們的做法是 $S$，有一個最佳解 $S'$。
 >
 > 兩者都先照右端點排序。
@@ -734,5 +736,487 @@ int main(){
 
 **題敘**
 
+在一個陣列 $x$ 中有 $n$ 個數字，$1 ,2 ,... , n$ 恰出現一次。
+
+其中會有 $m$ 次操作，$(a,b)$ 要把陣列中第 $a$ 個、第 $b$ 個數字交換，
+
+在每次交換完後，要按照大小順序收集所有數字。 在每一輪中，只能左至右收集，求要幾輪才能完成。
+
+$1 \leq n , m \leq 2 \times 10^{5}$ 、 $1\leq a,b \leq n$
 
 <br>
+
+**思路**
+
+本質上跟前一題類似。
+
+對於每個交換，要先扣掉尚未交換前的，再加上後來的。
+
+可以注意到若兩者相鄰，就會重複多算，因此用 set 來去重是一個好方法。 
+
+Time : $O(n + m)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long 
+signed main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    int n,m;
+    cin>>n>>m;
+    vector<int>x(n),p(n);
+    
+    for(int i=0;i<n;i++){
+        cin>>x[i];
+        p[x[i]-1] = i;
+    }
+    
+    int nw = 1;
+    for(int i=1;i<n;i++)
+        if(p[i] < p[i-1]) nw++;
+    
+    int a,b,valA,valB;
+    
+    while(m--){
+        cin>>a>>b;
+        a--; b--;
+        
+        valA = x[a]-1; valB = x[b]-1;
+            
+        set<pair<int,int>>s;
+        if(valA) s.insert({valA-1,valA});
+        if(valA+1<n) s.insert({valA,valA+1});
+        if(valB) s.insert({valB-1,valB});
+        if(valB+1<n) s.insert({valB,valB+1});
+        
+        for(auto [u,v] : s)
+            if(p[u] > p[v]) nw--;
+            
+        swap(x[a],x[b]);
+        swap(p[valA],p[valB]);
+        
+        for(auto [u,v]:s)
+            if(p[u] > p[v]) nw++;
+            
+        cout<<nw<<'\n';
+    }
+    return(0);
+}
+```
+
+---
+
+### Playlist
+
+<br>
+
+**題敘**
+
+有一個電視台的撥放清單 $k$ ，總共有 $n$ 首歌。
+
+求最長的連續歌曲滿足每有重複歌曲的長度。
+
+$1 \leq n \leq 2 \times 10^{5}$ 、 $1 \leq k_{i} leq 10^{9}$
+
+<br>
+
+**思路**
+
+可以依次處理每個位置是滿足子陣列右端點的可能，從中找最大值就是答案。
+
+我們可以發現 : 當右端點遞增時，左端點也是單調不降的。
+
+可以用雙指針維護。當右端點括張時，不斷縮小左端點直到符合條件。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+    int n;
+    cin>>n;
+    vector<int>x(n);
+    for(int i=0;i<n;i++) cin>>x[i];
+    map<int,int>mp;
+    int ans = 1,l = 0,r = 0;
+    while(r < n){
+        mp[x[r]]++;
+        while(mp[x[r]]>1){
+            mp[x[l]]--;
+            l++;
+        }
+        ans = max(r-l+1,ans);
+        r++;
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+---
+
+### Towers
+
+<br>
+
+**題敘**
+
+有 $n$ 個積木，每個積木都有一個體積 $k$，要疊成數座塔。一個積木要疊上那座塔，體積必須小於其頂端體積。
+
+要按照順序處理每個積木，可以堆上去某座塔或是新建造一座。求至少要幾座。
+
+$1 \leq n \leq 2\times 10^{5}$ 、 $1 \leq k_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+應該很容易可以想到 : 當處理到一個積木，要放在「能放的塔中頂端積木體積最小的」。
+
+應該不難理解，就是如果你放在其他座就會大幅減少後面的可能。但可以嘗試證明 : 
+
+> p.f 
+> 
+> 假設存在一個最佳解 $S$，
+> 在處理第 $i$ 個積木時，依照上述做法應該放在第 $x$ 座，其頂端體積為 $k_{a}$，但在 $S$ 中放在第 $y$ 棟，其頂端體積為 $k_{b}$
+> 由上述作法易知 $k_{a} \leq k_{b}$，所以將 $x$ , $y$ 兩座上面全部交換也是合法的。
+> 透過在不變壞的前提下不斷交換，可以將最佳解改成上述作法，故可證同為最佳解。
+> 
+
+可以使用 multiset + 二分搜來達成。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n;
+    cin>>n;
+
+    int k;
+    multiset<int>s;
+
+    for(int i=0;i<n;i++){
+        cin>>k;
+        auto it = s.upper_bound(k);
+        if(it!=s.end()) s.erase(it);
+        s.insert(k);
+    }
+    cout<<s.size();
+    return(0);
+}
+```
+
+
+---
+
+### Traffic Lights
+
+<br>
+
+**題敘**
+
+有一段長 $x$ 的道路，位置編號是 $[0,x]$，最初沒有交通號誌，會有 $n$ 個號誌依序加入，會被放在 $p_{i}$。
+
+求每次加入交通號誌後，最長無交通號誌路段的長度。
+
+$1 \leq x \leq 10^{9}$ 、 $1\leq n \leq 2\times 10^{5}$ 、 $0 < p_{i} < x$
+
+<br>
+
+**思路**
+
+每次新加入一個，就會把一段無交通號誌的路徑切斷，而那條路徑的端點顯然是前、後一個交通號誌，就可以把長度算出來。
+
+可以用 multiset 維護當前所有路徑長度，並用 set 維護有交通號誌的位置。新加入交通號誌時，只需要搭配二分搜等操作即可。
+
+為了方便，可以想像初始狀態是 -1 , n 有交通號誌的情況。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    int x,n;
+    cin>>x>>n;
+    set<int>s1;
+    s1.insert(0); s1.insert(x);
+    
+    multiset<int>s2;
+    s2.insert(x);
+    
+    int p;
+    for(int i=0;i<n;i++){
+        cin>>p;
+        auto a = s1.upper_bound(p),b = a; b--;
+        int d = *a - *b;
+        s2.erase(s2.find(d));
+        s2.insert(*a - p);
+        s2.insert(p- *b);
+        s1.insert(p);
+        cout<<*s2.rbegin()<<' ';
+    }
+    return(0);
+}
+```
+
+---
+
+### Distinct Values Subarrays
+
+<br>
+
+**題敘**
+
+一個長度為 $n$ 的陣列 $x$。求每個元素都不相同的子陣列數量。
+
+$1\leq n \leq 2\times 10^{5}$ 、 $1 \leq x_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+子陣列是要連續的，考慮一段長度為 $x$ 的陣列中沒有相同元素，那以最後一個為右端點的子陣列有 $x$ 種，注意也等價於每個元素都不相同的子陣列。
+
+那可以枚舉每個位置是子陣列右端點的可能，取總和即可。會發現左端點是不降的，因而用雙指針維護。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+signed main(){
+    int n;
+    cin>>n;
+    vector<int>x(n);
+    for(int i=0;i<n;i++) cin>>x[i];
+    int l = 0,r = 0,ans = 0;
+    map<int,int>mp;
+    while(r < n){
+        mp[x[r]]++;
+        while(mp[x[r]] > 1) mp[x[l++]]--;
+        ans += r-l+1;
+        r++;
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+---
+
+### Distinct Values Subsequences
+
+<br>
+
+**題敘**
+
+一個長度為 $n$ 的陣列 $x$。求每個元素都不相同的子序列數量。
+
+$1\leq n \leq 2\times 10^{5}$ 、 $1 \leq x_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+對於一個元素 $x_{i}$，假設它出現 $k$ 次，那對於這個數字的所有可能有 : 沒、第一個、第二個、第三個、...、第 $k$ 個出現，共 k+1 種。
+
+把每個數字的出現可能相乘就是答案，記得 -1 : 空陣列的狀況。
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define int long long
+
+const int MOD = 1e9+7;
+
+signed main(){
+    int n,x,ans = 1;
+    cin>>n;
+    set<int>s;
+    map<int,int>mp;
+    for(int i=0;i<n;i++){
+        cin>>x;
+        s.insert(x);
+        mp[x]++;
+    }
+    for(int i:s){
+        ans = (ans*(mp[i]+1))%MOD;
+    }
+    cout<<(ans-1+MOD)%MOD;
+    return(0);
+}
+```
+
+---
+
+### Josephus Problem I
+
+<br>
+
+**題敘**
+
+$n$ 個人圍成一圈，編號為 $[1,n]$，從編號 1 開始，每隔一個人就離開圓圈。
+
+求離開圓圈順序。
+
+$1\leq n \leq 2\times 10^{5}$
+
+<br>
+
+**思路**
+
+可以觀察到每繞一圈，人數就會減半，所以至多需要 $\log_{2} n$ 輪。
+
+可以直接使用 queue 模擬。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+    int n;
+    cin>>n;
+    queue<int>que;
+    for(int i=1;i<=n;i++) que.push(i);
+    while(!que.empty()){
+        que.push(que.front());
+        que.pop();
+        cout<<que.front()<<" ";       
+        que.pop();
+    }
+    return(0);
+}
+```
+
+### Josephus Problem II
+
+<br>
+
+**題敘**
+
+$n$ 個人圍成一圈，編號為 $[1,n]$，從編號 1 開始，每隔 $x$ 個人就離開圓圈。
+
+求離開圓圈順序。
+
+$1\leq n \leq 2\times 10^{5}$ 、 $1 \leq x \leq 10^{9}$
+
+<br>
+
+**思路**
+
+不幸的是用 queue 模擬行不通， 當 $x > n$ 時，達到 $O(n \times \frac{k}{n})$ 會 TLE 是必然。
+
+當現在在位置 $p$ 的人離開圓圈，我們要有效率地找還在圓圈內的下 $x$ 個。
+
+在處理時，若圓圈內有 $k$ 個人，若 $x > k$ 就會再繞回 $p$ ，所以等價於找下 $x \mod k$ 個。
+
+可以使用 BIT + 二分搜來處理。前者維護是否還在圓圈內。
+
+實作上，因為是圓環有點難處理，在找下一個的時候，可以以第 $n$ 個人切成兩段。
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+int n,k;
+vector<int>bit;
+ 
+int lowbit(int x){
+    return(x & (-x));
+}
+ 
+void Update(int id,int val){
+    for(;id<=n;id+=lowbit(id)) bit[id]+=val;
+}
+ 
+int query(int id){
+    int res = 0;
+    for(;id;id-=lowbit(id)) res += bit[id];
+    return(res);
+}
+ 
+int get(int l,int r){
+    if(r > n) return(get(l,n) + get(1,r-n));
+    return(query(r) - query(l-1));
+}
+ 
+int BST(int nw,int t){
+    int res=nw , l = 0, r = n , m;
+    while(l<=r){
+        m = (l+r)/2;
+        
+        int x = get(nw,nw+m);
+ 
+        if(x >= t){
+            int idx = (nw + m + n - 1) % n + 1;
+            if(get(idx,idx)) res = idx;
+            r = m-1;
+        }else{
+            l = m+1;
+        }
+    }
+    return(res);
+}
+ 
+int main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+ 
+    cin>>n>>k;
+    k++;
+ 
+    bit.resize(n+1);
+ 
+    for(int i=0;i<n;i++) Update(i+1,1);
+ 
+    int nw = 1;
+    for(int i=0;i<n;i++){
+        int t = k;
+        t %= get(1,n);
+        if(t==0) t = get(1,n);
+ 
+        int idx = BST(nw , t);
+        cout<<idx<<" ";
+ 
+        Update(idx,-1);
+ 
+        nw = idx;
+    }
+    return(0);
+}
+```
+
+---
