@@ -96,7 +96,18 @@
         }
 
         /* =========================
-           TOC (浮動側欄)
+           BLOCKQUOTE FIX
+        ========================= */
+        .post-content blockquote {
+            border-left: 4px solid #e5e5e5;
+            margin: 16px 0;
+            padding: 6px 14px;
+            color: #666;
+            background: #fafafa;
+        }
+
+        /* =========================
+           TOC
         ========================= */
 
         .toc {
@@ -135,7 +146,12 @@
             color: #000;
         }
 
-        /* 小螢幕直接隱藏 TOC */
+        /* TOC 前綴 "-" */
+        .toc li::before {
+            content: "- ";
+            color: #999;
+        }
+
         @media (max-width: 1100px) {
             .toc {
                 display: none;
@@ -180,12 +196,12 @@
     </aside>
     {% endif %}
 
-    <!-- 文章 -->
+    <!-- CONTENT -->
     <div class="post-content">
         {{ content }}
     </div>
 
-    <!-- JS：自動抓 h3 -->
+    <!-- TOC SCRIPT -->
     {% if has_list %}
     <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -200,7 +216,9 @@
             }
 
             const li = document.createElement("li");
+
             li.innerHTML = `<a href="#${h.id}">${h.textContent}</a>`;
+
             toc.appendChild(li);
         });
 
