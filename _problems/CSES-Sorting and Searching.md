@@ -2071,3 +2071,204 @@ signed main(){
     return(0);
 }
 ```
+
+---
+
+### Array Division
+
+<br>
+
+**題敘**
+
+一個長度為 $n$ 的陣列 $x$ ， 要將其切成 $k$ 個子陣列。
+
+求子陣列和中最大值的最小可能。
+
+$1 \leq n \leq 2\times 10^{5}$ 、 $1 \leq k \leq n$ 、 $1 \leq x_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+用二分搜出答案，
+
+假設當前決定的答案是 $m$，那麼每個子陣列和必須 $\leq m$，這件事可以用一個迴圈來做判斷，當總和超過時，則代表要切。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+#define int long long 
+ 
+int n,k;
+vector<int>x;
+ 
+bool check(int maxi){
+    int cut = 1,nw = 0, res = 0;
+    for(int i=0;i<n;i++){
+        if(nw + x[i] > maxi){
+            if(x[i] > maxi) return(false);
+            cut++;
+            nw = 0;
+        }
+        nw += x[i];
+    }
+    return(cut<=k);
+}
+ 
+signed main(){
+    cin>>n>>k;
+    x.resize(n);
+    for(int i=0;i<n;i++) cin>>x[i];
+ 
+    int ans , l = 0 , r= 1e18 , m;
+    while(l<=r){
+        m = (l+r)/2;
+        if(check(m)){
+            ans = m;
+            r = m-1;
+        }else{
+            l = m+1;
+        }
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+---
+
+### Movie Festival II
+
+<br>
+
+**題敘**
+
+共有 $n$ 部電影，每個皆有起始時間 $a$、結束時間 $b$。
+
+電影俱樂部總共有 $k$ 個人，每個人可以看不同電影。
+
+求所有人至多可以看幾種電影。
+
+$1 \leq k \leq n \leq 2 \times 10^{5}$ 、 $1 \leq a < b \leq 10^{9}$
+
+<br>
+
+**思路**
+
+結論是與「最多不重疊的線段」一樣，按照右端點做排序，證明方法雷同，留給讀者證明。
+
+那問題是現在有更多人，維持貪心的作法，如果現在的那部起始時間可以讓其中一個人去看，那就讓他去，條件等價於 : 有人上一個工作的結束時間 $\leq$ 這部的起始時間，
+
+這件事可以用 multiset 維護每個人看的那部結束時間。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+#define p pair<int,int>
+#define F first
+#define S second
+ 
+int main(){
+    int n,k;
+    cin>>n>>k;
+    multiset<int>s;
+    vector<p>m(n);
+    for(int i=0;i<n;i++) cin>>m[i].S>>m[i].F;
+    sort(m.begin(),m.end());
+    
+ 
+    for(int i=0;i<k;i++) s.insert(0);
+ 
+    int ans = 0;
+    for(auto [b,a] : m){
+        auto it = s.upper_bound(a);
+        
+        if(it == s.begin()) continue;
+        it--;
+        ans++;
+        s.erase(it);
+        s.insert(b);
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+---
+
+### Maximum Subarray Sum II
+
+<br>
+
+**題敘**
+
+有一個陣列 $x$，求子陣列長度在 $[a,b]$ 內的最大和。
+
+$1 \leq n \leq 2 \times 10^{5}$ 、 $1 \leq a \leq b \leq n$ 、 $-10^{9} \leq x_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+看到求子陣列和，考慮用前綴和維護，令 $p$ 代表前綴和陣列。
+
+當以 $i$ 為結尾且符合條件的最大和是 $p[i] - min(p[j])$，其中 $i-b \leq j \leq i-a$。
+
+在上式求最小值的時候，等價於在 $p$ 找連續 $b-a+1$ 個數字中的最小值，可以用 monotonic deque 來維護目前還在範圍內且有機會的索引值。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+ 
+#define int long long 
+ 
+signed main(){
+    int n , a,b;
+    cin>>n>>a>>b;
+    
+    vector<int>p(n+1);
+ 
+ 
+    for(int i=0;i<n;i++){
+        cin>>p[i+1];
+        p[i+1] += p[i];
+    }
+
+    int ans = -1e18;
+
+    deque<int>dq;
+
+    for(int i=0;i<=n;i++){
+        while(i-a>=0 && !dq.empty() && p[dq.back()] >= p[i-a]) dq.pop_back();
+
+        if(i-a>=0) dq.push_back(i-a);
+ 
+        while(!dq.empty() && dq.front() < i-b) dq.pop_front();
+        
+        if(!dq.empty()) ans = max(p[i] - p[dq.front()] , ans);
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+---
+
