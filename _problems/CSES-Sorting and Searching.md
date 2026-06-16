@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Sorting and Searching"
-tags: ["CSES"]
+tags: ["CSES","list"]
 ---
 
 ---
