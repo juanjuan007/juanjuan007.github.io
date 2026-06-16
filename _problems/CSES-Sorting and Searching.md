@@ -1559,6 +1559,8 @@ signed main(){
 
 起始時間是 0 ，要完成每個任務即便獎勵是負的。求在最優策略下的獎勵值。
 
+$1 \leq n \leq 2\times 10^{5}$ 、 $1\leq a,d \leq 10^{6}$
+
 <br>
 
 **思路**
@@ -1574,6 +1576,8 @@ signed main(){
 對應到 $f_{p_{i}} = \sum_{j = 1}^{i-1} p_{j}$，所以 $\sum f = a_{p_{1}} \times (n-1) + a_{p_{2}} \times (n-2) + ... + a_{p_{n-1}}$
 
 易知最好的策略是按照持續時間由小至大做。
+
+Time : $O(n \log n)$
 
 <br>
 
@@ -1599,6 +1603,467 @@ signed main(){
     for(auto [a,d] : arr){
         nw+=a;
         ans += d-nw;
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+---
+
+### Reading Books
+
+<br>
+
+**題敘**
+
+有 $n$ 本書，每本都有閱讀時間 $t$。
+
+Kotivalo 跟 Justiina 都要閱讀所有的書，必須從頭看到尾、不能同時閱讀同一本書，
+
+求至少需要多少時間。
+
+$1 \leq n \leq 2 \times 10^{5}$ 、 $1\leq t_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+可以知道閱讀時長最大的書一定最難安排，不妨來考慮一些狀況。
+
+case 1 : $max(t) < \frac{sum(t)}{2}$
+
+前面一個人從最長耗時的書開始讀，後面一個人從耗時第二長的開始讀，再讀最長的，就可以確定不會重疊。
+
+case 2 : $max(t) \ge \frac{sum(t)}{2}$
+
+前面一個人在看時間最長的那本書，後面的人看其它所有書 ; 看完再交換。
+
+結合前面兩種情況，答案會是 $max(max(t) \times 2 , sum(t))$。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+#define int long long 
+signed main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    int n;
+    cin>>n;
+    int tot = 0, maxi = 0,x;
+    for(int i=0;i<n;i++){
+        cin>>x;
+        tot += x;
+        maxi = max(x,maxi);
+    }
+    int res = max(tot , maxi*2);
+    cout<<res;
+    return(0);
+}
+```
+
+---
+
+### Sum of Three Values
+
+<br>
+
+**題敘**
+
+要在陣列 $a$ 中，找三個相異位置的數字和為 $x$。
+
+$1\leq n \leq 5000$ 、$1 \leq x , a_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+枚舉第一個位置的值，就變成 Two Sum 問題。
+
+Time : $O(n ^ {2})$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+#define int long long
+#define p pair<int,int>
+#define F first
+#define S second
+ 
+int n,x;
+vector<p>num;
+ 
+bool f(int k){
+    int l=0,r=n-1;
+    while(l<r){
+        if(l==k) l++;
+        if(r==k) r--;
+        if(l>=r) break;
+ 
+        if(num[l].F + num[r].F == x-num[k].F){
+            cout<<num[l].S+1<<" "<<num[r].S+1<<" "<<num[k].S+1;
+            return(true);
+        }else if(num[l].F + num[r].F > x-num[k].F){
+            r--;
+        }else{
+            l++;
+        }
+    }
+    return(false);
+}
+ 
+ 
+signed main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    cin>>n>>x;
+    num.resize(n);
+    for(int i=0;i<n;i++){
+            cin>>num[i].F;
+        num[i].S = i;
+    }
+    sort(num.begin(),num.end());
+    for(int i=0;i<n;i++){
+        if(f(i)) break;
+        if(i==n-1) cout<<"IMPOSSIBLE";
+    }
+    return(0);
+}
+```
+
+---
+
+### Sum of Four Values
+
+<br>
+
+**題敘**
+
+要在陣列 $a$ 中，找四個相異位置的數字和為 $x$。
+
+$1\leq n \leq 1000$ 、$1 \leq x , a_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+枚舉第一個位置的值，就變成 Three Sum 問題。
+
+Time : $O(n^{3})$
+
+<br>
+
+Code : 
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+#define int long long 
+#define p pair<int,int>
+#define F first
+#define S second
+ 
+ 
+int n;
+vector<p>a;
+ 
+array<int,2> TwoSum(int nw , int target){
+    int l = nw,r = n-1;
+    while(l<r){
+        if(a[l].F + a[r].F < target) l++;
+        else if(a[l].F + a[r].F > target) r--;
+        else return(array<int,2> {l,r});
+    }
+    return(array<int,2> {-1,-1});
+}
+ 
+signed main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    int x;
+    cin>>n>>x;
+    a.resize(n);
+    for(int i=0;i<n;i++){
+        a[i].S = i + 1;
+        cin>>a[i].F;
+    }
+    sort(a.begin(),a.end());
+    for(int i=0;i<n;i++){
+        for(int j=i+1;j+2 < n;j++){
+            array<int,2> res = TwoSum(j+1, x - a[i].F - a[j].F);
+            if(res != (array<int,2>){-1,-1}){
+                cout<<a[i].S<<" "<<a[j].S<<" "<<a[res[0]].S<<" "<<a[res[1]].S;
+                return(0);
+            }
+        }
+    }
+    cout<<"IMPOSSIBLE";
+    return(0);
+}
+```
+
+---
+
+### Nearest Smaller Values
+
+<br>
+
+**題敘**
+
+有一個長度為 $n$ 的陣列 $a$，
+
+求每個數字的左側最近較小值。
+
+$1 \leq n \leq 2 \times 10^{5}$ 、 $1 \leq x_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+依序處理每個位置 $i$，可以發現若 $i > j$ 且 $a_{i} \leq a_{j}$，那 $j$ 不可能成為後面的答案之一。
+
+可以維護 stack 裝目前還有可能是後面答案的索引值，因為元素有序，亦稱 monotonic stack。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+signed main(){
+    int n;
+    cin>>n;
+    vector<int>num(n);
+    stack<int>st;
+    for(int i=0;i<n;i++){
+        cin>>num[i];
+        while(!st.empty() && num[st.top()] >= num[i]) st.pop();
+        if(st.empty()) cout<<0<<" ";
+        else cout<<st.top()+1<<" ";
+        st.push(i);
+    }
+    return(0);
+}
+```
+
+---
+
+### Subarray Sums I
+
+<br>
+
+**題敘**
+
+一個長度為 $n$ 的陣列 $a$。求有多少個子陣列和為 $x$。
+
+$1\leq n \leq 2\times 10^{5}$ 、 $1 \leq x , a_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+我們可以枚舉每個位置當右端點的情況，因為 $a$ 中數字為正，所以如果我們現在區間內和 $> x$ 那左端點就要右移。
+
+可以發現兩者都是單調不降的，可以用雙指針寫上述這件事。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n,x;
+    cin>>n>>x;
+    vector<int>a(n);
+    for(int i=0;i<n;i++) cin>>a[i];
+
+    int ans = 0 , nw = 0 , l = 0 , r = 0;
+    while(r < n){
+        nw += a[r];
+        while(nw > x) nw -= a[l++];
+        if(nw==x)  ans++;
+        r++;
+    }
+    
+    cout<<ans;
+    return(0);
+}
+```
+
+---
+
+### Subarray Sums II
+
+<br>
+
+**題敘**
+
+一個長度為 $n$ 的陣列 $a$。求有多少個子陣列和為 $x$。
+
+$1\leq n \leq 2\times 10^{5}$ 、 $-10^{9} \leq x , a_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+乍看之下跟上一題無異，唯一差異在於有負數，就無法擁有單調性。
+
+子陣列是一段連續的和，可以用前綴和維護，用 $p$ 代表前綴和陣列。
+
+一樣依序處理每個位置是右端的狀況，
+
+當處理到 $i$ 時，以其為右端點且子陣列和為 $x$ 的組合數等價於 $j < i$ ，$p[i] - p[j] = x$ 的個數。
+
+可以用 map 來維護。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+#define int long long 
+ 
+signed main(){
+    int n,x,a;
+    cin>>n>>x;
+ 
+    int cnt = 0;
+ 
+    vector<int>p(n+1); p[0] = 0;
+    map<int,int>mp;
+    mp[0]++;
+    for(int i=0;i<n;i++){
+        cin>>a;
+        p[i+1] = p[i] + a;
+        cnt += mp[p[i+1] - x];
+        mp[p[i+1]]++;
+    }
+    cout<<cnt;
+    return(0);
+}
+```
+
+---
+
+### Subarray Divisibility
+
+<br>
+
+**題敘**
+
+有 $n$ 個數字的陣列 $a$，求有幾個子陣列和能被 $n$ 整除。
+
+$1\leq n \leq 2 \times 10^{5}$ 、 $-10^{9} \leq a_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+對於子陣列和，不妨用前綴和來維護，
+
+不過只需要維護前綴 $\mod n$ 的值，因為可以發現只與它有關，注意有負數可能。
+
+以 $i$ 為右端點且子陣列和被 $n$ 整除的組合數等價於 $j \leq i$ ，$p[i] - p[j] = 0$ 的個數。
+
+可以依序處理並直接計數。
+
+Time : $O(n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+#define int long long 
+ 
+signed main(){
+    int n,a;
+    cin>>n;
+ 
+    vector<int>p(n+1); p[0] = 0;
+    vector<int>cnt(n+1); cnt[0] = 1;
+    
+    int ans = 0;
+    for(int i=0;i<n;i++){
+        cin>>a;
+        p[i+1] = ((p[i]+a) % n + n )%n;
+        ans += cnt[p[i+1]];
+        cnt[p[i+1]]++;
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+---
+
+### Distinct Values Subarrays II
+
+<br>
+
+**題敘**
+
+一個陣列 $x$ 有 $n$ 個數字。
+
+求子陣列相異數字至少為 $k$ 的數量。
+
+<br>
+
+**思路**
+
+
+考慮每個位置是右端點的狀況，若可以找出其最大相異的子陣列，那就可以計算有幾種了。
+
+可以發現左端點是單調遞增，因此直接使用雙指針來維護。
+
+Time : $O(n)$
+
+<br>
+
+Code :
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+#define int long long 
+ 
+signed main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    int n,k;
+    cin>>n>>k;
+    map<int,int>mp;
+    int ans = 0,l=0,r=0,nw = 0;
+    vector<int>a(n);
+    for(;r<n;r++){
+        cin>>a[r];
+        if(mp[a[r]]++==0) nw++;
+        
+        while(l<n && nw > k)
+            if(--mp[a[l++]] == 0) nw--;
+ 
+        ans += r-l+1;
+        r++;
     }
     cout<<ans;
     return(0);
