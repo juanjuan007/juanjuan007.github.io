@@ -8,63 +8,89 @@ layout: default
   <h1>{{ page.title }}</h1>
   <hr>
 
-  {% comment %} 
-      1. 抓取所有合法的標籤 (排除含有 -1 標籤的文章)
-  {% endcomment %}
+  {% comment %} =========================
+     1. 收集所有 tags（排除 hidden + LIST）
+  ========================= {% endcomment %}
+
   {% assign all_tags = "" | split: "," %}
-  
+
   {% for prob in site.problems %}
+
       {% assign is_hidden = false %}
+      {% assign has_list_only = false %}
+
       {% for t in prob.tags %}
-          {% comment %} 這裡轉成字串檢查，比較保險 {% endcomment %}
           {% assign tag_str = t | append: "" %}
-          {% if tag_str == "-1" or tag_str == "LIST" %}
+
+          {% if tag_str == "-1" %}
               {% assign is_hidden = true %}
           {% endif %}
       {% endfor %}
 
       {% unless is_hidden %}
+
           {% for t in prob.tags %}
-              {% assign all_tags = all_tags | push: t %}
+              {% assign tag_str = t | append: "" %}
+
+              {% if tag_str == "LIST" %}
+                  {% assign has_list_only = true %}
+              {% endif %}
+
+              {% unless tag_str == "LIST" %}
+                  {% assign all_tags = all_tags | push: t %}
+              {% endunless %}
           {% endfor %}
+
       {% endunless %}
+
   {% endfor %}
 
   {% assign unique_tags = all_tags | uniq | sort %}
 
-  {% comment %} 
-      2. 渲染清單 
-  {% endcomment %}
+  {% comment %} =========================
+     2. render tags
+  ========================= {% endcomment %}
+
   {% for tag in unique_tags %}
+
+      {% if tag != "LIST" %}
+
       <div class="tag-group-wrapper">
           <h2 class="tag-category-title">{{ tag }}</h2>
-          
-          <ul class="clean-note-list">
-              {% for item in site.problems %}
-                  {% comment %} 檢查文章是否有這篇文章，且該文章不含 -1 {% endcomment %}
-                  {% if item.tags contains tag %}
-                      {% assign hide_item = false %}
-                      {% for it in item.tags %}
-                          {% assign it_str = it | append: "" %}
-                          {% if it_str == "-1" %}
-                              {% assign hide_item = true %}
-                          {% endif %}
-                      {% endfor %}
 
-                      {% unless hide_item %}
-                          <li class="post-item">
-                              <a class="post-link" href="{{ item.url }}">{{ item.title }}</a>
-                          </li>
-                      {% endunless %}
+          <ul class="clean-note-list">
+
+              {% for item in site.problems %}
+
+                  {% assign hide_item = false %}
+
+                  {% for it in item.tags %}
+                      {% assign it_str = it | append: "" %}
+                      {% if it_str == "-1" %}
+                          {% assign hide_item = true %}
+                      {% endif %}
+                  {% endfor %}
+
+                  {% if item.tags contains tag and hide_item == false %}
+
+                      <li class="post-item">
+                          <a class="post-link" href="{{ item.url }}">{{ item.title }}</a>
+                      </li>
+
                   {% endif %}
+
               {% endfor %}
+
           </ul>
       </div>
+
+      {% endif %}
+
   {% endfor %}
+
 </div>
 
 <style>
-  /* 容器與 Archives 一致 */
   .archives-container { 
       max-width: 800px; 
       margin: 40px auto; 
@@ -82,15 +108,22 @@ layout: default
   }
   .back-home:hover { color: #000; }
 
-  /* 標題對齊 Archives */
-  h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 20px; }
-  
-  hr { border: 0; border-top: 1px solid #eee; margin-bottom: 30px; }
+  h1 { 
+      font-size: 2.5rem; 
+      font-weight: 800; 
+      margin-bottom: 20px; 
+  }
 
-  /* 分類區塊間距 */
-  .tag-group-wrapper { margin-bottom: 45px; }
+  hr { 
+      border: 0; 
+      border-top: 1px solid #eee; 
+      margin-bottom: 30px; 
+  }
 
-  /* 分類標題樣式 */
+  .tag-group-wrapper { 
+      margin-bottom: 45px; 
+  }
+
   .tag-category-title {
       font-size: 0.9rem;
       color: #bbb;
@@ -100,7 +133,6 @@ layout: default
       font-family: monospace;
   }
 
-  /* 題目列表樣式 */
   .clean-note-list { 
       list-style: none; 
       padding: 0; 
@@ -111,7 +143,6 @@ layout: default
       margin: 12px 0; 
   }
 
-  /* 題目連結 */
   .post-link { 
       color: #333; 
       text-decoration: none; 
@@ -120,7 +151,7 @@ layout: default
       transition: all 0.3s ease; 
       display: inline-block;
   }
-  
+
   .post-link:hover { 
       color: #000; 
       text-decoration: underline;
