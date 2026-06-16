@@ -1221,3 +1221,382 @@ int main(){
 ```
 
 ---
+
+### Nested Ranges Check
+
+<br>
+
+**題敘**
+
+有 $n$ 個嵌套範圍 $[x, y]$。求每個範圍是否包含其它、是否被其它包含。
+
+範圍 $[a,b]$ 包含範圍 $[c,d]$，代表 $a \leq c$ 、 $d \leq b$。
+
+$1 \leq n \leq 2\times 10^{5}$ 、 $1 \leq x < y \leq 10^{9}$
+
+<br>
+
+**思路**
+
+一開始全部無序，做任何檢查都不容易，
+
+按照左端點升序排序，若相同時，按右端點降序排序。
+
+可以發現若一個區間包含其它區間，代表後面有右端點 $\leq$ 當前的右端點 ;
+
+若被其它區間包含，代表前面有右端點 $\geq$ 當前的右端點 ;
+
+原因不多做說明。
+
+上述兩件事，因為只需要求是否，所以源自於哪個位置不重要，直接紀錄當前的極值就可以。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+bool cmp(array<int,3> a , array<int,3> b){
+    if(a[0]==b[0]) return(a[1] > b[1]);
+    return(a[0] < b[0]);
+}
+
+int main(){
+    int n;
+    cin>>n;   
+    vector<array<int,3>>arr(n);
+    for(int i=0;i<n;i++){
+        cin>>arr[i][0]>>arr[i][1];
+        arr[i][2] = i;    
+    }
+
+    sort(arr.begin(),arr.end(),cmp);
+
+    vector<array<int,2>> ans(n , {0,0});
+
+    int nw = 1e9 + 5;
+    for(int i=n-1;i>=0;i--){
+        auto [x,y,id] = arr[i];
+        if(nw <= y) ans[id][0] = 1;
+        nw = min(y , nw);
+    }
+
+    nw = 0;
+    for(int i=0;i<n;i++){
+        auto [x,y,id] = arr[i];
+        if(nw >= y) ans[id][1] = 1;
+        nw = max(y , nw);
+    }
+
+    for(int i=0;i<n;i++) cout<<ans[i][0]<<" ";
+    cout<<'\n';
+    for(int i=0;i<n;i++) cout<<ans[i][1]<<" ";
+    return(0);
+}
+```
+
+---
+
+### Nested Ranges Count
+
+<br>
+
+**題敘**
+
+有 $n$ 個嵌套範圍 $[x, y]$。求每個範圍包含幾個其它範圍、被幾個其它範圍包含。
+
+範圍 $[a,b]$ 包含範圍 $[c,d]$，代表 $a \leq c$ 、 $d \leq b$。
+
+$1 \leq n \leq 2\times 10^{5}$ 、 $1 \leq x < y \leq 10^{9}$
+
+<br>
+
+**思路**
+
+跟上一題無異，只是變成要數比較小、大的有幾個。
+
+這可以用 BIT 維護。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+int n,sz;
+vector<int>bit;
+vector<array<int,3>>arr;
+ 
+int lowbit(int x){
+    return(x & (-x));
+}
+ 
+void modify(int id,int val){
+    for(;id<=sz;id+=lowbit(id)) bit[id]+=val;
+}
+ 
+int query(int id){
+    int res = 0;
+    for(;id;id-=lowbit(id)) res+=bit[id];
+    return(res);
+}
+ 
+bool cmp(array<int,3>a,array<int,3>b){
+    if(a[0]!=b[0]) return(a[0] < b[0]);
+    return(a[1] > b[1]);
+}
+ 
+int main(){
+    cin>>n;
+    arr.resize(n);
+    vector<int>r;
+    for(int i=0;i<n;i++){
+        cin>>arr[i][0]>>arr[i][1];
+        r.push_back(arr[i][0]);
+        r.push_back(arr[i][1]);
+        arr[i][2] = i;
+    }
+    sort(r.begin(),r.end());
+    r.resize(unique(r.begin(),r.end())-r.begin());
+    sz = r.size();
+    for(int i=0;i<n;i++){
+        arr[i][0] = lower_bound(r.begin(),r.end(),arr[i][0])-r.begin()+1;
+        arr[i][1] = lower_bound(r.begin(),r.end(),arr[i][1])-r.begin()+1;
+    }
+    sort(arr.begin(),arr.end(),cmp);
+    
+    vector<int>ans(n);
+    bit.assign(sz+1,0);
+    for(int i=n-1;i>=0;i--){
+        auto [x,y,id] = arr[i];
+        ans[id] = query(y);
+        modify(y,1);
+    }
+    for(int i:ans) cout<<i<<" ";
+    cout<<'\n';
+    bit.assign(sz+1,0);
+    for(int i=0;i<n;i++){
+        auto[x,y,id] = arr[i];
+        ans[id] = query(sz)-query(y-1);
+        modify(y,1);
+    }
+    for(int i:ans) cout<<i<<" ";
+    return(0);
+}
+```
+
+---
+
+### Room Allocation
+
+<br>
+
+**題敘**
+
+有一家飯店，會有 $n$ 位顧客依序到來，每個顧客會有抵達時間、離開時間。
+
+如果一位顧客的離開時間早於另一位顧客的抵達時間，則兩位顧客可以入住同一間客房。
+
+求至少要幾間客房可以容納所有人以及每個人會被分配到哪間客房。
+
+$1 \leq n \leq 2 \times 10^{5}$ 、 $1\leq a \leq b \leq 10^{9}$
+
+<br>
+
+**思路**
+
+我們把每個人看作一段線段，那麼也就是求最多會有幾個人同時在飯店並為每個人分配。
+
+
+是哪個人在飯店不重要，我們要關注的是人數，所以可以把每個人的抵達時間、離開時間分別拆成兩個陣列並排序，就可以想像是兩個指針在處理最前面的人，其實也有點類似差分的想法。
+
+分配到哪間客房可以用 queue 維護目前是空的客房編號，當有人抵達時就取最前面的，若無則代表要多開一間; 有人離開，就把他原本住的放入隊列。
+
+注意題目給的離開時間是開區間，可由題敘知道。
+
+Time : $O(n \log n)$
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+
+#define p pair<int,int>
+#define F first
+#define S second
+ 
+int main(){
+    int n;
+    cin>>n;
+
+    vector<p>st(n),ed(n);
+    for(int i=0;i<n;i++){
+        cin>>st[i].F>>ed[i].F;
+        st[i].S = i; ed[i].F++; ed[i].S = i;
+    }
+
+    sort(st.begin(),st.end());
+    sort(ed.begin(),ed.end());
+
+    queue<int>que;
+    
+    int cnt = 0,a = 0,b = 0;
+    vector<int>r(n);
+
+    while(a < n){
+        if(st[a].F < ed[b].F){
+            if(que.empty()){
+                r[st[a].S] = ++cnt;
+            }else{
+                r[st[a].S] = que.front();
+                que.pop();
+            }
+            a++;
+        }else if(st[a].F == ed[b].F){
+            r[st[a].S] = r[ed[b].S];
+            a++; b++;
+        }else if(st[a].F > ed[b].F){
+            que.push(r[ed[b].S]);
+            b++;
+        }
+    }
+
+    cout<<cnt<<'\n';
+    for(int i:r) cout<<i<<" ";
+    return(0);
+}
+```
+
+---
+
+### Factory Machines
+
+<br>
+
+**題敘**
+
+有 $n$ 台機器，每台機器都有製造一個產品的所需時間 $k$。
+
+求要製造 $t$ 個產品的最短時間。
+
+$1 \leq n \leq 2\times 10^{5}$ 、 $1 \leq t \leq 10^{9}$ 、 $1 \leq k_{i} \leq 10^{9}$
+
+<br>
+
+**思路**
+
+看到最小值，想到「二分搜」，搜尋所需時間並判斷是否可行。而下界是 0，上界是 耗時最短的機器 $\times$ 數量。
+
+判斷是否可行，只需要計算每台機器可以製造幾個，取總和即可。
+
+<br>
+
+Time : $O(n \log (min(k) \times t))$
+
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+ 
+int n,t;
+vector<int>k;
+ 
+bool check(int x){
+        int res = 0;
+        for(int i:k){
+            int nw = x/i;
+            res += nw;
+        }
+        return(res >= t);
+}
+ 
+signed main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+
+    int mini = INT_MAX;
+    cin>>n>>t;
+    k.resize(n);
+    for(int i=0;i<n;i++){
+        cin>>k[i];
+        mini = min(mini,k[i]);
+    }
+    int ans,L = 0,R = mini * t;
+    while(L <= R){
+        int m = (L+R)/2;
+        if(check(m)){
+            ans = m;
+            R = m-1;
+        }else{
+            L = m+1;
+        }
+    }
+    cout<<ans;
+    return(0);
+}
+```
+
+---
+
+### Tasks and Deadlines
+
+<br>
+
+**題敘**
+
+有 $n$ 個任務，每個任務有持續時間跟截止時間 $[a,d]$，完成每個任務的獎勵是 $d - f$，$f$ 是你完成任務的時間。
+
+起始時間是 0 ，要完成每個任務即便獎勵是負的。求在最優策略下的獎勵值。
+
+<br>
+
+**思路**
+
+令 $f_{i}$ 表第 $i$ 個任務完成的時間。
+
+獎勵就會是 : $\sum_{i = 1}^{n} (d_{i} - f_{i}) = \sum d - \sum f$ ，
+
+可以知道前項是固定的，所以要讓後項盡可能的小，
+
+假設我們最後選擇的順序是 $p$，那依序的持續時間會是 ${a_{p_{1}} , a_{p_{2}} ,... ,a_{p_{n}}}$，
+
+對應到 $f_{p_{i}} = \sum_{j = 1}^{i-1} p_{j}$，所以 $\sum f = a_{p_{1}} \times (n-1) + a_{p_{2}} \times (n-2) + ... + a_{p_{n-1}}$
+
+易知最好的策略是按照持續時間由小至大做。
+
+<br>
+
+Code : 
+```cpp
+#include<bits/stdc++.h>
+using namespace std;
+ 
+#define int long long
+#define p pair<int,int>
+#define F first
+#define S second
+ 
+signed main(){
+    ios::sync_with_stdio(0),cin.tie(0);
+    int n;
+    cin>>n;
+    vector<p>arr(n);
+    for(int i=0;i<n;i++) cin>>arr[i].F>>arr[i].S;
+    sort(arr.begin(),arr.end());
+ 
+    int ans = 0,nw = 0;
+    for(auto [a,d] : arr){
+        nw+=a;
+        ans += d-nw;
+    }
+    cout<<ans;
+    return(0);
+}
+```
