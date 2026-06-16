@@ -26,7 +26,7 @@ layout: default
 
           {% assign tag_str = t | append: "" %}
 
-          {% if tag_str != "LIST" and tag_str != "-1" %}
+          {% if tag_str != "list" and tag_str != "-1" %}
               {% assign all_tags = all_tags | push: t %}
           {% endif %}
 
@@ -42,7 +42,7 @@ layout: default
 
   {% for tag in unique_tags %}
 
-      {% if tag != "LIST" and tag != "-1" %}
+      {% if tag != "list" and tag != "-1" %}
 
       <div class="tag-group-wrapper">
 
