@@ -8,20 +8,20 @@ layout: default
   <h1>{{ page.title }}</h1>
   <hr>
 
-  {% comment %} =========================
-     1. 收集所有 tags（排除 hidden + LIST）
-  ========================= {% endcomment %}
+  {% comment %}
+  =========================
+  1. 收集 tags（排除 hidden + LIST）
+  =========================
+  {% endcomment %}
 
   {% assign all_tags = "" | split: "," %}
 
   {% for prob in site.problems %}
 
       {% assign is_hidden = false %}
-      {% assign has_list_only = false %}
 
       {% for t in prob.tags %}
           {% assign tag_str = t | append: "" %}
-
           {% if tag_str == "-1" %}
               {% assign is_hidden = true %}
           {% endif %}
@@ -32,13 +32,10 @@ layout: default
           {% for t in prob.tags %}
               {% assign tag_str = t | append: "" %}
 
-              {% if tag_str == "LIST" %}
-                  {% assign has_list_only = true %}
-              {% endif %}
-
               {% unless tag_str == "LIST" %}
                   {% assign all_tags = all_tags | push: t %}
               {% endunless %}
+
           {% endfor %}
 
       {% endunless %}
@@ -47,13 +44,13 @@ layout: default
 
   {% assign unique_tags = all_tags | uniq | sort %}
 
-  {% comment %} =========================
-     2. render tags
-  ========================= {% endcomment %}
+  {% comment %}
+  =========================
+  2. render tags + posts
+  =========================
+  {% endcomment %}
 
   {% for tag in unique_tags %}
-
-      {% if tag != "LIST" %}
 
       <div class="tag-group-wrapper">
           <h2 class="tag-category-title">{{ tag }}</h2>
@@ -63,15 +60,21 @@ layout: default
               {% for item in site.problems %}
 
                   {% assign hide_item = false %}
+                  {% assign is_list_only = false %}
 
                   {% for it in item.tags %}
                       {% assign it_str = it | append: "" %}
+
                       {% if it_str == "-1" %}
                           {% assign hide_item = true %}
                       {% endif %}
+
+                      {% if it_str == "LIST" %}
+                          {% assign is_list_only = true %}
+                      {% endif %}
                   {% endfor %}
 
-                  {% if item.tags contains tag and hide_item == false %}
+                  {% if item.tags contains tag and hide_item == false and is_list_only == false %}
 
                       <li class="post-item">
                           <a class="post-link" href="{{ item.url }}">{{ item.title }}</a>
@@ -83,8 +86,6 @@ layout: default
 
           </ul>
       </div>
-
-      {% endif %}
 
   {% endfor %}
 
