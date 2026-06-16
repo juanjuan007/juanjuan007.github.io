@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "CH1-常見優化技巧"
-tags: ["洛谷"]
+tags: ["洛谷","list"]
 ---
 
 ---
