@@ -4,12 +4,10 @@ title: "Week1"
 tags: ["Sprout-2026"]
 ---
 
-### 上機
-
 ---
 
-#### 1. 大善人老闆救濟東南亞兒童
-[SproutOJ 18](http://tioj.sprout.tw/problems/18/)
+### pA 大善人老闆救濟東南亞兒童
+[Sprout 18.](http://tioj.sprout.tw/problems/18/)
 
 <br>
 
@@ -64,21 +62,21 @@ int main(){
 
 ---
 
-#### 2. 中國人排隊問題
-[SproutOJ 19](https://tioj.sprout.tw/problems/19/)
+### pB 中國人排隊問題
+[Sprout 19.](https://tioj.sprout.tw/problems/19/)
 
 WIP
 
 ---
 
-#### 3. 陸行鳥大賽車
-[SproutOJ 20](https://tioj.sprout.tw/problems/20/)
+### pC 陸行鳥大賽車
+[Sprout 20.](https://tioj.sprout.tw/problems/20/)
 
 <br>
 
 **思路**
 
-支援「刪除、「交換」元素，使用 Linked List。
+支援「刪除」、「交換」元素，使用 Linked List。
 
 Time : $O(n + m)$
 
@@ -125,8 +123,8 @@ signed main(){
 
 ---
 
-#### 4. stack 練習
-[SproutOJ 35](https://tioj.sprout.tw/problems/36)
+### pD stack 練習
+[Sprout 35.](https://tioj.sprout.tw/problems/36)
 
 Time : $O(N)$
 
@@ -159,8 +157,8 @@ int main(){
 
 ---
 
-#### 5. queue 練習
-[SproutOJ 36](https://tioj.sprout.tw/problems/36)
+### pE queue 練習
+[Sprout 36](https://tioj.sprout.tw/problems/36)
 
 Time : $O(N)$
 
@@ -189,6 +187,28 @@ int main(){
     return(0);
 }
 ```
+
+---
+
+### pF 檸檬汽水傳說
+[Sprout 21.](https://tioj.sprout.tw/problems/21)
+
+<br>
+
+**思路**
+
+依題目所述，若 $(i,j)$ 能溝通，代表不存在 $i < k < j$ 滿足 $A_{k} > min(A_{i} , A_{j})$，
+
+也就是 $A_{i} \geq A_{k}$ 且 $A_{j} \geq A_{k}$，
+
+換而言之，如果已經存在 $i < k$，滿足 $A_{i} < A_{k}$ 時，就不存在 $j > k$ 能讓　$(i,j)$ 溝通。
+
+依序處理每個人是右側的狀況，可以用 stack 維護目前前面還有可能的人，但這樣若有相同者則無法計算。
+
+有兩種方法。
+
+
+
 
 
 
