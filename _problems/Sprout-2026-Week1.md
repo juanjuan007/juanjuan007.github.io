@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Week1"
-tags: ["Sprout-2026"]
+tags: ["Sprout-2026","list"]
 ---
 
 ---
