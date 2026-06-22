@@ -5,6 +5,7 @@ tags: ["Sprout-2026" , "list"]
 ---
 
 ---
+h
 
 ### pA 二元搜尋樹
 [Sprout 47.](http://tioj.sprout.tw/problems/47/)
