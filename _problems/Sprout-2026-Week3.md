@@ -539,7 +539,6 @@ int main(){
 
 [Sprout 364.](https://tioj.sprout.tw/problems/364)
 
-<br>
 
 WIP
 
