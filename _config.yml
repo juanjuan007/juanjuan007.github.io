@@ -9,3 +9,14 @@ collections:
 markdown: kramdown
 kramdown:
   math_engine: mathjax
+  
+plugins:
+  - jekyll-spaceship
+
+jekyll-spaceship:
+  processors:
+    - mathjax
+    - mermaid
+    - plantuml
+    - media
+    - emoji
