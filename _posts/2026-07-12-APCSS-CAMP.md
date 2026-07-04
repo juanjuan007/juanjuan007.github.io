@@ -86,4 +86,13 @@ title: "APCSS-CAMP"
 
 <img width="578" height="197" alt="螢幕擷取畫面 2026-06-22 185210" src="https://github.com/user-attachments/assets/d94e9182-05b3-429d-be64-92fa3f0326b4" />
 
+#### 講義
+
+20260705 
+
+ 在 deadline 修 
+暴力又被 TLE : 你閱讀一遍中文排版指北
+
+juanjuan : 我前陣子應該是閱讀到指南了
+
 ---
