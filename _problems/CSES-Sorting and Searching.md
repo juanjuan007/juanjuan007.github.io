@@ -821,7 +821,7 @@ signed main(){
 
 求最長的連續歌曲滿足每有重複歌曲的長度。
 
-$1 \leq n \leq 2 \times 10^{5}$ 、 $1 \leq k_{i} leq 10^{9}$
+$1 \leq n \leq 2 \times 10^{5}$ 、 $1 \leq k_{i} \leq 10^{9}$
 
 <br>
 
