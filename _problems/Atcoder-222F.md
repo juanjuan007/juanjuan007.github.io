@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "222F - Expensive Expense"
+title: "222F-Expensive Expense"
 tags: ["Atcoder"]
 ---
 
