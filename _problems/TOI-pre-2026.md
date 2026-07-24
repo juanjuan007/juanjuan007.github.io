@@ -4,6 +4,11 @@ title: "pre-2026"
 tags: ["TOI"]
 ---
 
+
+[補題 OJ](https://codeforces.com/gym/677534)  by AA競程
+
+---
+
 ### A. 
 
 簽到題
@@ -21,15 +26,23 @@ tags: ["TOI"]
 
 共有 $n$ 參賽者，第 $i$ 位參賽者，會在第 $i$ 秒以 $p_{i}$ 的價格買入，
 
-若在某一秒 $t$，滿足 $i < t \leq min(i+R,n)$ 且  $p_{t} > max{p_{i} , p_{i+1} , ... , p_{t-1}}$，則稱對第 $i$ 位參加 $t_{i}$ 是一個新高價，
+若在某一秒 $t$，滿足 $i < t \leq min(i+R,n)$ 且  $p_{t} > max{p_{i} , p_{i+1} , ... , p_{t-1}}$，則稱對第 $i$ 位參加 $t_{i}$ 是一個新高價，就可以獲得該價格的獎金。
 
-**思路**
+若所有參賽者獲得的獎金總和不能超過預算 $L$。求出最大的整數 $R \leq n-1$ 滿足條件。
 
 <br>
 
-subtask 1 : $n \leq 200$
+**思路**
+
+- subtask 1 : $n \leq 200$
+
+暴力枚舉 $R$，依序處理每個人遇到的新高價。
 
 Time : $O(n^3)$
+
+<br>
+
+Code:
 
 ```cpp
 #include<bits/stdc++.h>
@@ -41,6 +54,7 @@ int n,L;
 vector<int>p;
 
 int f(int l,int r){
+
     int res = 0;
     int mx = p[l];
 
@@ -51,7 +65,7 @@ int f(int l,int r){
         }
     }
 
-    return res;
+    return(res);
 }
 
 signed main(){
@@ -76,10 +90,18 @@ signed main(){
 
 <br>
 
-subtack 2 : $n \leq 5000$
+- subtack 2 : $n \leq 5000$
+
+可以觀察到: $R$ 遞增時，獲得的總獎金也是遞增的。
+
+由於存在單調性，因此考慮二分搜 $R$。
+  
 Time : $O(n^{2} \log n)$
 
+<br>
+
 Code:
+
 ```cpp
 #include<bits/stdc++.h>
 using namespace std;
@@ -90,8 +112,7 @@ int n,L;
 vector<int>p;
 
 int f(int l,int r){
-    int res = 0;
-    int mx = p[l];
+    int res = 0 , mx = p[l];
 
     for(int i=l+1;i<=r;i++){
         if(p[i] > mx){
@@ -132,7 +153,17 @@ signed main(){
 
 <br>
 
-subtask 3 : $p_{1} < p_{2} < ... < p_{n}$
+- subtask 3 : $p_{1} < p_{2} < ... < p_{n}$
+
+由於 $p$ 是遞增的，那代表每一個位置都是新高價。
+
+所以在 $i$ 所獲得的獎金會是 $\sum_{x = 1}^{R} p[i+x]$，那就可以用前綴和來維護這件事。
+
+Time: $O(n \log^{2} n)$
+
+<br>
+
+Code: 
 
 ```cpp
 #include<bits/stdc++.h>
@@ -180,10 +211,19 @@ signed main(){
 }
 ```
 
-
 <br>
 
-滿分解
+- 滿分解
+
+&lt;M一&gt;
+
+不妨考慮使用倍增法，跳到下 2的冪次 個新高價並維護總和。下 $2^{0}$ 個，是用 monotonic stack 做到。
+
+那在二分搜 $R$ 後，只要在每個位置，在上述的倍增表格中一次二分搜即可。
+
+Time : $O(n \log^{2} n)$
+
+<br>
 
 Code :
 ```cpp
@@ -192,17 +232,17 @@ using namespace std;
 
 
 #define int long long 
-#define pr pair<int,int>
+#define pii pair<int,int>
 #define F first
 #define S second
 
 int n,L,LG;
 vector<int>p;
-vector<vector<pr>>up;
+vector<vector<pii>>up;
 
 void init(){
     LG = __lg(n)+1;
-    up.resize(n,vector<pr>(LG+1));
+    up.resize(n,vector<pii>(LG+1));
     stack<int>st;
     for(int i=n-1;i>=0;i--){
         while(!st.empty() && p[i] >= p[st.top()]) st.pop();
@@ -246,6 +286,7 @@ bool check(int R){
 
 signed main(){
     cin>>n>>L;
+
     p.resize(n);
     for(int i=0;i<n;i++) cin>>p[i];
     init();
@@ -265,7 +306,24 @@ signed main(){
 }
 ```
 
-Code : 
+
+<br>
+
+
+&lt;M二&gt;
+
+可以觀察: 在位置 $i$ 對那些位置而言是新高價，
+
+易知，若其左側最近較大值的索引值是 $pre[i]$，那麼對於 $(pre[i],[i])$，$p[i]$ 皆是新高價，這可以用 monotonic stack 做到。
+
+所以，二分搜再計數即可。
+
+Time: $O(n \log n)$ 
+
+
+<br>
+
+Code: 
 
 ```cpp
 #include<bits/stdc++.h>
@@ -311,8 +369,21 @@ signed main(){
 }
 ```
 
+<br>
 
-Code : - By PCC
+&lt;M三&gt;
+
+By PCC
+
+從右到左，用 monotonic deque 維護當前是新高價者。
+
+一樣需要二分搜 $R$ 才能銜接上述的事情。
+
+Time: $O(n \log n)$
+
+<br>
+
+Code:
 ```cpp
 #include<bits/stdc++.h>
 using namespace std;
@@ -353,6 +424,8 @@ signed main(){
     return(0);
 }
 ```
+
+[更多做法](https://hackmd.io/@alan-huang-82789/TOI2026ST_pD) by huangallen
 
 ---
 
