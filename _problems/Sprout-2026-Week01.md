@@ -220,6 +220,7 @@ Time : $O(N \log N)$
 
 <br>
 Code : 
+
 ```cpp
 #include <bits/stdc++.h>
 using namespace std;
@@ -559,4 +560,5 @@ signed main(){
     return(0);
 }
 ```
+
 ---
