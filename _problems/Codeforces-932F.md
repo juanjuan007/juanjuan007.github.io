@@ -6,6 +6,8 @@ tags: ["Codeforces"]
 
 > 20260824
 
+[Codeforces 932F](https://codeforces.com/problemset/problem/932/F)
+
 **題敘**
 
 給定一棵 $N$ 個節點的樹，每個節點有兩個權重 $a_{i}$ , $b_{i}$。
