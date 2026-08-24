@@ -102,7 +102,6 @@ int query(int p,int l,int r,int id){
 vector<vector<int>>g;
 vector<int>rt;
 
-
 vector<int>a;
 
 void dfs(int v,int f){
